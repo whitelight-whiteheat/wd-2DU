@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="2DU - Tags and Filters - Organize and filter your tasks">
+    <title>2DU - Tags and Filters</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h1>2DU</h1>
+            <p>Your Personal Task Manager</p>
+        </div>
+        <nav>
+            <ul>
+                <li><button class="search-button" onclick="window.open('searchModal.html', 'Search Tasks', 'width=600,height=700')">Search</button></li>
+                <li><a href="project.html">Tasks</a></li>
+                <li><a href="calendar.html">Calendar</a></li>
+                <li><a href="tags.html" class="active">Tags & Filters</a></li>
+            </ul>
+            <button class="add-task-button" onclick="window.open('taskModal.html', 'Add Task', 'width=600,height=700')">Add Task</button>
+        </nav>
+    </aside>
+
+    <main>
+        <div class="container">
+            <h2>Tags and Filters</h2>
+            <p>Organize and filter your tasks using tags. Create custom filters to view tasks that match specific criteria.</p>
+
+            <section>
+                <h2>Popular Tags</h2>
+                <div class="tag-cloud">
+                    <span class="tag">Work</span>
+                    <span class="tag">Personal</span>
+                    <span class="tag">Meeting</span>
+                    <span class="tag">Development</span>
+                    <span class="tag">Shopping</span>
+                    <span class="tag">Health</span>
+                    <span class="tag">Documentation</span>
+                    <span class="tag">Planning</span>
+                </div>
+            </section>
+
+            <section>
+                <h2>Custom Filters</h2>
+                <div class="filter-list">
+                    <div class="filter-item">
+                        <h3>Work Tasks</h3>
+                        <p>Tasks tagged with "Work"</p>
+                        <button class="button">Apply Filter</button>
+                    </div>
+                    <div class="filter-item">
+                        <h3>High Priority</h3>
+                        <p>Tasks with high priority</p>
+                        <button class="button">Apply Filter</button>
+                    </div>
+                    <div class="filter-item">
+                        <h3>Due This Week</h3>
+                        <p>Tasks due within 7 days</p>
+                        <button class="button">Apply Filter</button>
+                    </div>
+                    <div class="filter-item">
+                        <h3>Personal Tasks</h3>
+                        <p>Tasks tagged with "Personal"</p>
+                        <button class="button">Apply Filter</button>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>Create New Filter</h2>
+                <form class="filter-form">
+                    <div class="form-group">
+                        <label for="filter-name">Filter Name</label>
+                        <input type="text" id="filter-name" name="filter-name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Filter Criteria</label>
+                        <div class="filter-criteria">
+                            <div class="criteria-group">
+                                <select name="field">
+                                    <option value="tag">Tag</option>
+                                    <option value="priority">Priority</option>
+                                    <option value="due-date">Due Date</option>
+                                    <option value="status">Status</option>
+                                </select>
+                                <select name="operator">
+                                    <option value="equals">Equals</option>
+                                    <option value="contains">Contains</option>
+                                    <option value="before">Before</option>
+                                    <option value="after">After</option>
+                                </select>
+                                <input type="text" name="value" placeholder="Value">
+                                <button type="button" class="button">Add Criteria</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="button">Create Filter</button>
+                </form>
+            </section>
+
+            <section>
+                <h2>Filtered Tasks</h2>
+                <div class="filter-results">
+                    <p>Showing tasks that match your current filter:</p>
+                    <ul class="task-list">
+                        <li class="task-item priority-high">
+                            <input type="checkbox" class="task-checkbox">
+                            <div class="task-content">
+                                <div class="task-title">Complete Documentation</div>
+                                <div class="task-description">Write up the final documentation for the website</div>
+                                <div class="task-due-date">Due: Today, 5:00 PM</div>
+                                <div class="task-tags">
+                                    <span class="tag">Work</span>
+                                    <span class="tag">Documentation</span>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="task-item priority-medium">
+                            <input type="checkbox" class="task-checkbox">
+                            <div class="task-content">
+                                <div class="task-title">Review Code Changes</div>
+                                <div class="task-description">Review and merge pending pull requests</div>
+                                <div class="task-due-date">Due: Today, 3:00 PM</div>
+                                <div class="task-tags">
+                                    <span class="tag">Work</span>
+                                    <span class="tag">Development</span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 2DU Task Manager. All rights reserved.</p>
+        <p>Contact: <a href="mailto:support@2du.com">support@2du.com</a></p>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html> 

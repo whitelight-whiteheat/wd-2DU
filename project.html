@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="2DU - Today's Tasks - Focus on what needs to be done today">
+    <title>Today's Tasks - 2DU</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h1>2DU</h1>
+            <p>Your Personal Task Manager</p>
+        </div>
+        <nav>
+            <ul>
+                <li><button class="search-button" onclick="window.open('searchModal.html', 'Search Tasks', 'width=600,height=700')">Search</button></li>
+                <li><a href="project.html" class="active">Tasks</a></li>
+                <li><a href="calendar.html">Calendar</a></li>
+                <li><a href="tags.html">Tags & Filters</a></li>
+            </ul>
+            <button class="add-task-button" onclick="window.open('taskModal.html', 'Add Task', 'width=600,height=700')">Add Task</button>
+        </nav>
+    </aside>
+
+    <main>
+        <div class="container">
+            <div class="today-header">
+                <h2>Today's Tasks</h2>
+                <p class="date-display">March 18, 2024</p>
+            </div>
+
+            <div class="task-stats">
+                <div class="stat-item">
+                    <span class="stat-value">3</span>
+                    <span class="stat-label">Tasks</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">1</span>
+                    <span class="stat-label">Completed</span>
+                </div>
+            </div>
+
+            <div class="task-list-container">
+                <ul class="task-list">
+                    <li class="task-item priority-high">
+                        <input type="checkbox" class="task-checkbox">
+                        <div class="task-content">
+                            <div class="task-title">Complete Project Documentation</div>
+                            <div class="task-meta">
+                                <span class="task-time">Due: 5:00 PM</span>
+                                <span class="task-tags">
+                                    <span class="tag">Work</span>
+                                    <span class="tag">Documentation</span>
+                                </span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="task-item priority-medium">
+                        <input type="checkbox" class="task-checkbox">
+                        <div class="task-content">
+                            <div class="task-title">Review Code Changes</div>
+                            <div class="task-meta">
+                                <span class="task-time">Due: 3:00 PM</span>
+                                <span class="task-tags">
+                                    <span class="tag">Work</span>
+                                    <span class="tag">Development</span>
+                                </span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="task-item priority-low">
+                        <input type="checkbox" class="task-checkbox">
+                        <div class="task-content">
+                            <div class="task-title">Update Task List</div>
+                            <div class="task-meta">
+                                <span class="task-time">Due: 4:00 PM</span>
+                                <span class="task-tags">
+                                    <span class="tag">Work</span>
+                                    <span class="tag">Planning</span>
+                                </span>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 2DU Task Manager. All rights reserved.</p>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html> 

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Tasks - 2DU</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="modal-overlay" id="searchModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Search Tasks</h2>
+                <button class="close-button" onclick="window.close()">&times;</button>
+            </div>
+            
+            <form class="search-form" id="searchForm">
+                <div class="form-group">
+                    <input type="text" id="searchQuery" name="searchQuery" 
+                           placeholder="Search tasks..." autocomplete="off">
+                </div>
+                
+                <div class="search-filters">
+                    <div class="form-group">
+                        <label for="priorityFilter">Priority</label>
+                        <select id="priorityFilter" name="priority">
+                            <option value="">All Priorities</option>
+                            <option value="high">High</option>
+                            <option value="medium">Medium</option>
+                            <option value="low">Low</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="dateFilter">Due Date</label>
+                        <select id="dateFilter" name="date">
+                            <option value="">Any Time</option>
+                            <option value="today">Today</option>
+                            <option value="week">This Week</option>
+                            <option value="month">This Month</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="search-results">
+                    <div class="results-stats">
+                        <p>Found <span id="resultCount">0</span> tasks matching your search</p>
+                    </div>
+                    
+                    <ul class="task-list" id="searchResults">
+                        <!-- Search results will be populated here -->
+                    </ul>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html> 

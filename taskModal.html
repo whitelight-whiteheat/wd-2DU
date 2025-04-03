@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Task - 2DU</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="modal-overlay" id="taskModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Task</h2>
+                <button class="close-button" onclick="window.close()">&times;</button>
+            </div>
+            
+            <form class="task-form" id="taskForm">
+                <div class="form-group">
+                    <label for="taskTitle">Task Title</label>
+                    <input type="text" id="taskTitle" name="taskTitle" required placeholder="What needs to be done?">
+                </div>
+                
+                <div class="form-group">
+                    <label for="taskDescription">Description</label>
+                    <textarea id="taskDescription" name="taskDescription" placeholder="Add details about your task..."></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="dueDate">Due Date</label>
+                        <input type="date" id="dueDate" name="dueDate">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="priority">Priority</label>
+                        <select id="priority" name="priority">
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="tags">Tags</label>
+                    <input type="text" id="tags" name="tags" placeholder="work, personal, urgent">
+                    <small class="form-hint">Separate tags with commas</small>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="button secondary" onclick="window.close()">Cancel</button>
+                    <button type="submit" class="button primary">Add Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html> 

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="2DU - Calendar View - Plan and schedule your tasks">
+    <title>2DU - Calendar</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h1>2DU</h1>
+            <p>Your Personal Task Manager</p>
+        </div>
+        <nav>
+            <ul>
+                <li><button class="search-button" onclick="window.open('searchModal.html', 'Search Tasks', 'width=600,height=700')">Search</button></li>
+                <li><a href="project.html">Tasks</a></li>
+                <li><a href="calendar.html" class="active">Calendar</a></li>
+                <li><a href="tags.html">Tags & Filters</a></li>
+            </ul>
+            <button class="add-task-button" onclick="window.open('taskModal.html', 'Add Task', 'width=600,height=700')">Add Task</button>
+        </nav>
+    </aside>
+
+    <main>
+        <div class="container">
+            <h2>Calendar View</h2>
+            <p>Plan and schedule your tasks with our intuitive calendar view. See your tasks laid out by date and time.</p>
+
+            <section>
+                <div class="calendar-controls">
+                    <button class="button">Previous Week</button>
+                    <h3>Week of March 18, 2024</h3>
+                    <button class="button">Next Week</button>
+                </div>
+            </section>
+
+            <section>
+                <div class="calendar-grid">
+                    <div class="calendar-header">
+                        <div class="calendar-cell">Monday</div>
+                        <div class="calendar-cell">Tuesday</div>
+                        <div class="calendar-cell">Wednesday</div>
+                        <div class="calendar-cell">Thursday</div>
+                        <div class="calendar-cell">Friday</div>
+                        <div class="calendar-cell">Saturday</div>
+                        <div class="calendar-cell">Sunday</div>
+                    </div>
+                    <div class="calendar-body">
+                        <div class="calendar-cell">
+                            <div class="date">18</div>
+                            <div class="task-item priority-high">
+                                <div class="task-title">Documentation Review</div>
+                                <div class="task-time">10:00 AM</div>
+                            </div>
+                        </div>
+                        <div class="calendar-cell">
+                            <div class="date">19</div>
+                            <div class="task-item priority-medium">
+                                <div class="task-title">Team Meeting</div>
+                                <div class="task-time">2:00 PM</div>
+                            </div>
+                        </div>
+                        <div class="calendar-cell">
+                            <div class="date">20</div>
+                            <div class="task-item priority-high">
+                                <div class="task-title">Client Presentation</div>
+                                <div class="task-time">11:00 AM</div>
+                            </div>
+                            <div class="task-item priority-low">
+                                <div class="task-title">Gym</div>
+                                <div class="task-time">6:00 PM</div>
+                            </div>
+                        </div>
+                        <div class="calendar-cell">
+                            <div class="date">21</div>
+                            <div class="task-item priority-medium">
+                                <div class="task-title">Code Review</div>
+                                <div class="task-time">3:00 PM</div>
+                            </div>
+                        </div>
+                        <div class="calendar-cell">
+                            <div class="date">22</div>
+                            <div class="task-item priority-low">
+                                <div class="task-title">Shopping</div>
+                                <div class="task-time">5:00 PM</div>
+                            </div>
+                        </div>
+                        <div class="calendar-cell">
+                            <div class="date">23</div>
+                        </div>
+                        <div class="calendar-cell">
+                            <div class="date">24</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>Upcoming Events</h2>
+                <ul class="upcoming-events">
+                    <li>
+                        <div class="event-date">March 25, 2024</div>
+                        <div class="event-title">Documentation Deadline</div>
+                        <div class="event-description">Final submission for website documentation</div>
+                    </li>
+                    <li>
+                        <div class="event-date">March 28, 2024</div>
+                        <div class="event-title">Team Retreat</div>
+                        <div class="event-description">Annual team planning session</div>
+                    </li>
+                    <li>
+                        <div class="event-date">April 1, 2024</div>
+                        <div class="event-title">New Website Launch</div>
+                        <div class="event-description">Website goes live</div>
+                    </li>
+                </ul>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 2DU Task Manager. All rights reserved.</p>
+        <p>Contact: <a href="mailto:support@2du.com">support@2du.com</a></p>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html> 
