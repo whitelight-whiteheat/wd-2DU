@@ -385,7 +385,15 @@
                         // Find tasks for this day
                         const dayTasks = tasks.filter(task => {
                             if (!task.dueDate) return false;
-                            const taskDate = new Date(task.dueDate).toISOString().split('T')[0];
+                            
+                            // Validate the date before converting to ISO string
+                            const taskDateObj = new Date(task.dueDate);
+                            if (isNaN(taskDateObj.getTime())) {
+                                // Invalid date, skip this task
+                                return false;
+                            }
+                            
+                            const taskDate = taskDateObj.toISOString().split('T')[0];
                             return taskDate === dateString;
                         });
                         
