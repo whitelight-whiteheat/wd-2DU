@@ -254,7 +254,7 @@
         
         <nav>
             <ul>
-                <li><a href="index.html">Today</a></li>
+                <li><a href="project.html">Today</a></li>
                 <li><a href="calendar.html" class="active">Calendar</a></li>
                 <li><a href="tags.html">Tags</a></li>
             </ul>
@@ -299,93 +299,92 @@
     </main>
 
     <script>
-        // Load tasks from localStorage
+        // Get my tasks from browser storage
         let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
         
-        // Calendar variables
+        // Keep track of which month we're looking at
         let currentDate = new Date();
         let currentMonth = currentDate.getMonth();
         let currentYear = currentDate.getFullYear();
         
-        // Initialize calendar
+        // Start everything when the page loads
         document.addEventListener('DOMContentLoaded', function() {
-            // Check for date parameter in URL
+            // Check if we came here by clicking a task's date
             const urlParams = new URLSearchParams(window.location.search);
             const dateParam = urlParams.get('date');
             
             if (dateParam) {
-                // Parse the date parameter
+                // Go to the month of the clicked task
                 const targetDate = new Date(dateParam);
                 if (!isNaN(targetDate.getTime())) {
-                    // Set the current date to the target date
                     currentDate = targetDate;
-                    // Update the month and year
                     currentMonth = currentDate.getMonth();
                     currentYear = currentDate.getFullYear();
                 }
             }
             
-            // Render the calendar
+            // Show the calendar
             renderCalendar();
             
-            // Add event listeners for month navigation
+            // Make the previous month button work
             document.getElementById('prevMonth').addEventListener('click', function() {
                 currentMonth--;
                 if (currentMonth < 0) {
-                    currentMonth = 11;
-                    currentYear--;
+                    currentMonth = 11; // Go to December
+                    currentYear--;     // of the previous year
                 }
                 renderCalendar();
             });
             
+            // Make the next month button work
             document.getElementById('nextMonth').addEventListener('click', function() {
                 currentMonth++;
                 if (currentMonth > 11) {
-                    currentMonth = 0;
-                    currentYear++;
+                    currentMonth = 0;  // Go to January
+                    currentYear++;     // of the next year
                 }
                 renderCalendar();
             });
             
-            // Listen for messages from the task modal
+            // Update when new tasks are added
             window.addEventListener('message', function(event) {
                 if (event.data === 'taskAdded') {
-                    // Reload tasks from localStorage
                     loadTasks();
-                    // Re-render the calendar
                     renderCalendar();
                 }
             });
         });
 
-        // Function to render the calendar
+        // Draw the calendar on the page
         function renderCalendar() {
-            // Update current month display
+            // Show which month we're looking at
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                              'July', 'August', 'September', 'October', 'November', 'December'];
             document.getElementById('currentMonth').textContent = 
-                new Date(currentYear, currentMonth, 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+                monthNames[currentMonth] + ' ' + currentYear;
             
-            // Clear existing calendar
+            // Clear the old calendar
             const calendarBody = document.getElementById('calendarBody');
             calendarBody.innerHTML = '';
             
-            // Get first day of month and total days
+            // Figure out where to start the calendar
             const firstDay = new Date(currentYear, currentMonth, 1);
             const lastDay = new Date(currentYear, currentMonth + 1, 0);
             const totalDays = lastDay.getDate();
             
-            // Add empty cells for days before first day of month
+            // Add empty boxes for days before the 1st
             for (let i = 0; i < firstDay.getDay(); i++) {
                 const emptyCell = document.createElement('div');
                 emptyCell.className = 'calendar-day';
                 calendarBody.appendChild(emptyCell);
             }
             
-            // Add cells for each day of the month
+            // Add a box for each day of the month
             for (let day = 1; day <= totalDays; day++) {
                 const dayCell = document.createElement('div');
                 dayCell.className = 'calendar-day';
                 
-                // Check if today
+                // Highlight today's date
                 const today = new Date();
                 if (day === today.getDate() && 
                     currentMonth === today.getMonth() && 
@@ -393,49 +392,32 @@
                     dayCell.classList.add('today');
                 }
                 
-                // Create date string for this day
+                // Find tasks due on this day
                 const dateString = new Date(currentYear, currentMonth, day).toISOString().split('T')[0];
-                
-                // Find tasks for this day
                 const dayTasks = tasks.filter(task => {
                     if (!task.dueDate) return false;
-                    
-                    // Validate the date before converting to ISO string
-                    const taskDateObj = new Date(task.dueDate);
-                    if (isNaN(taskDateObj.getTime())) {
-                        // Invalid date, skip this task
-                        return false;
-                    }
-                    
-                    const taskDate = taskDateObj.toISOString().split('T')[0];
+                    const taskDate = new Date(task.dueDate).toISOString().split('T')[0];
                     return taskDate === dateString;
                 });
                 
-                // Create tasks HTML
+                // Add tasks to the calendar day
                 let tasksHTML = '';
                 if (dayTasks.length > 0) {
                     tasksHTML = dayTasks.map(task => {
-                        // Create tags HTML
+                        // Show tags if the task has any
                         let tagsHTML = '';
-                        if (task.tags) {
-                            // Handle both string and array formats
-                            let tagValues = [];
-                            if (typeof task.tags === 'string') {
-                                tagValues = task.tags.split(',');
-                            } else if (Array.isArray(task.tags)) {
-                                tagValues = task.tags;
-                            }
-                            
-                            tagsHTML = tagValues.map(tag => {
-                                const tagIcon = getTagIcon(tag);
-                                return `<a href="tags.html?tag=${encodeURIComponent(tag)}" class="task-tag">${tagIcon}${tag}</a>`;
-                            }).join('');
+                        if (task.tags && task.tags.length > 0) {
+                            let tagList = Array.isArray(task.tags) ? task.tags : task.tags.split(',');
+                            tagsHTML = tagList.map(tag => 
+                                `<a href="tags.html?tag=${tag}" class="task-tag">${tag}</a>`
+                            ).join('');
                         }
                         
                         return `<div class="day-task">${task.title} ${tagsHTML}</div>`;
                     }).join('');
                 }
                 
+                // Put the day number and tasks in the calendar box
                 dayCell.innerHTML = `
                     <div class="day-number">${day}</div>
                     <div class="day-tasks">${tasksHTML}</div>
@@ -444,33 +426,8 @@
                 calendarBody.appendChild(dayCell);
             }
         }
-
-        // Function to get tag icon
-        function getTagIcon(tag) {
-            const tagIcons = {
-                'work': `<svg class="tag-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M20 7L12 3L4 7M20 7L12 11M20 7V17L12 21M12 11L4 7M12 11V21M4 7V17L12 21" stroke="#5E60CE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>`,
-                'personal': `<svg class="tag-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="#5E60CE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z" stroke="#5E60CE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>`,
-                'shopping': `<svg class="tag-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M9 22C9.55228 22 10 21.5523 10 21C10 20.4477 9.55228 20 9 20C8.44772 20 8 20.4477 8 21C8 21.5523 8.44772 22 9 22Z" stroke="#5E60CE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M20 22C20.5523 22 21 21.5523 21 21C21 20.4477 20.5523 20 20 20C19.4477 20 19 20.4477 19 21C19 21.5523 19.4477 22 20 22Z" stroke="#5E60CE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M1 1H5L7.68 14.39C7.77144 14.8504 8.02191 15.264 8.38755 15.5583C8.75318 15.8526 9.2107 16.009 9.68 16H19.4C19.8693 16.009 20.3268 15.8526 20.6925 15.5583C21.0581 15.264 21.3086 14.8504 21.4 14.39L23 6H6" stroke="#5E60CE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>`,
-                'health': `<svg class="tag-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M22 12H18L15 21L9 3L6 12H2" stroke="#5E60CE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>`
-            };
-            
-            return tagIcons[tag] || `<svg class="tag-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M9 5H7C5.89543 5 5 5.89543 5 7V19C5 20.1046 5.89543 21 7 21H17C18.1046 21 19 20.1046 19 19V7C19 5.89543 18.1046 5 17 5H15M9 5C9 6.10457 9.89543 7 11 7H13C14.1046 7 15 6.10457 15 5M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5" stroke="#5E60CE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>`;
-        }
         
-        // Function to load tasks from localStorage
+        // Get fresh tasks from storage
         function loadTasks() {
             tasks = JSON.parse(localStorage.getItem('tasks')) || [];
         }

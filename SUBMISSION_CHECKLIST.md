@@ -53,10 +53,10 @@ Use this checklist to ensure your project is ready for submission.
 
 ## Submission
 
-- [ ] All files are included in the submission
-- [ ] Files are organized in the correct folder structure
-- [ ] No unnecessary files are included
-- [ ] Submission includes the URL of the deployed application
+- [x] All files are included in the submission
+- [ x Files are organized in the correct folder structure
+- [x] No unnecessary files are included
+- [] Submission includes the URL of the deployed application
 - [ ] Submission includes screenshots of validation results
 - [ ] Submission includes link to IDE view in repl.it
 

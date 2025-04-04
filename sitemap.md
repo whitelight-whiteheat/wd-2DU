@@ -1,9 +1,9 @@
-# Task Manager Sitemap
+# 2DU Task Management Sitemap
 
 ```
 project.html (Home Page)
 ├── Navigation
-│   ├── Project (active on project.html)
+│   ├── Today (active on project.html)
 │   ├── Calendar
 │   ├── Tags
 │   ├── Search Tasks
@@ -40,12 +40,6 @@ tags.html
 ├── Empty State (when no tasks with selected filters)
 └── Footer
 
-taskDisplay.html
-├── Success Message
-├── Task Title
-├── Confirmation Message
-└── Redirect Message
-
 searchModal.html (Popup)
 ├── Search Input
 ├── Filter Options
@@ -73,15 +67,13 @@ taskModal.html (Popup)
 
 3. **tags.html**: A view for organizing tasks by tags, with filtering options and tag statistics.
 
-4. **taskDisplay.html**: A confirmation page shown after adding a task, displaying a success message and redirecting back to the project page.
+4. **searchModal.html**: A popup window for searching tasks with various filter options.
 
-5. **searchModal.html**: A popup window for searching tasks with various filter options.
-
-6. **taskModal.html**: A popup window with a form for adding new tasks with various fields.
+5. **taskModal.html**: A popup window with a form for adding new tasks with various fields.
 
 ## Navigation Flow
 
-- Users can navigate between main pages (Project, Calendar, Tags) using the sidebar navigation.
+- Users can navigate between main pages (Today, Calendar, Tags) using the sidebar navigation.
 - The "Search Tasks" button opens the searchModal.html in a popup window.
 - The "Add Task" button opens the taskModal.html in a popup window.
-- After adding a task, users are redirected to taskDisplay.html and then back to project.html with the new task.
+- After adding a task, users are redirected back to project.html with the new task.

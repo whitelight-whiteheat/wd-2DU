@@ -46,6 +46,5 @@ A simple task management application built with HTML, CSS, and JavaScript.
 For more detailed information about the project, please refer to:
 
 - [Project Summary](PROJECT_SUMMARY.md)
-- [Deployment Instructions](DEPLOYMENT.md)
 - [Requirements Checklist](requirements-checklist.md)
 - [Sitemap](sitemap.md)

@@ -278,7 +278,7 @@
         
         <nav>
             <ul>
-                <li><a href="index.html" class="active">Today</a></li>
+                <li><a href="project.html" class="active">Today</a></li>
                 <li><a href="calendar.html">Calendar</a></li>
                 <li><a href="tags.html">Tags</a></li>
             </ul>
@@ -312,131 +312,119 @@
     </main>
 
     <script>
-        // Task management functionality
+        // This is where I store all my tasks
         let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
         
-        // Function to open task modal
+        // Opens a new window to add tasks
+        // I learned about window.open from MDN docs!
         function openTaskModal() {
             const modalWindow = window.open('taskModal.html', 'Add Task', 'width=500,height=600');
             if (modalWindow) {
                 modalWindow.focus();
             } else {
-                alert('Please allow popups for this site to add tasks.');
+                alert('Please allow popups to add tasks!');
             }
         }
         
-        // Function to clear all tasks
+        // Deletes all tasks after asking the user
         function clearAllTasks() {
             if (tasks.length === 0) {
-                alert('No tasks to clear.');
+                alert('No tasks to clear!');
                 return;
             }
             
-            if (confirm('Are you sure you want to clear all tasks? This action cannot be undone.')) {
+            // Always ask before deleting - good practice!
+            if (confirm('Do you want to delete all tasks? You cannot undo this!')) {
                 tasks = [];
                 saveTasks();
-                alert('All tasks have been cleared.');
+                alert('All tasks cleared!');
             }
         }
         
-        // Add event listeners for task buttons
+        // This runs when the page loads
+        // I learned about DOMContentLoaded from class
         document.addEventListener('DOMContentLoaded', function() {
+            // Connect the buttons to their functions
             document.getElementById('addTaskBtn').addEventListener('click', openTaskModal);
             document.getElementById('addTaskLink').addEventListener('click', function(e) {
-                e.preventDefault();
+                e.preventDefault(); // Prevents the link from actually going somewhere
                 openTaskModal();
             });
             document.getElementById('clearAllTasksBtn').addEventListener('click', clearAllTasks);
             
-            // Listen for messages from the task modal
+            // Listen for new tasks being added
             window.addEventListener('message', function(event) {
                 if (event.data === 'taskAdded') {
-                    console.log('Received taskAdded message');
-                    // Reload tasks from localStorage
+                    // Get the updated task list
                     tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-                    console.log('Tasks after reload:', tasks);
                     updateTaskCounts();
                     renderTasks();
                 }
             });
             
-            // Load tasks from localStorage
+            // Load saved tasks when page opens
             tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-            console.log('Initial tasks:', tasks);
             
-            // Update UI
+            // Update the page
             updateTaskCounts();
             renderTasks();
         });
         
-        // Function to save tasks to localStorage
+        // Save tasks to browser storage
+        // localStorage is like a mini database in the browser!
         function saveTasks() {
             localStorage.setItem('tasks', JSON.stringify(tasks));
             updateTaskCounts();
             renderTasks();
         }
         
-        // Function to update task counts
+        // Update the task counter at the top
         function updateTaskCounts() {
             const totalTasks = tasks.length;
             const completedTasks = tasks.filter(task => task.completed).length;
             
             document.getElementById('totalTasks').textContent = totalTasks;
             document.getElementById('completedTasks').textContent = completedTasks;
-            
-            // We'll handle empty state display in renderTasks instead
         }
         
-        // Function to render tasks
+        // Show all tasks on the page
         function renderTasks() {
             const taskList = document.getElementById('taskList');
-            taskList.innerHTML = '';
+            taskList.innerHTML = ''; // Clear the old tasks first
             
-            // Show/hide empty state based on tasks length
+            // Show "no tasks" message if empty
             document.getElementById('emptyState').style.display = tasks.length === 0 ? 'block' : 'none';
             
-            // If no tasks, return early
             if (tasks.length === 0) {
                 return;
             }
             
+            // Loop through each task and create its HTML
             tasks.forEach((task, index) => {
                 const taskItem = document.createElement('div');
                 taskItem.className = 'task-item';
                 
-                // Create priority class
+                // Set the priority color
                 const priorityClass = `priority-${task.priority || 'medium'}`;
                 
-                // Create tags HTML
+                // Create the HTML for tags
                 let tagsHTML = '';
-                if (task.tags) {
-                    // Handle both string and array formats
-                    let tagValues = [];
-                    if (typeof task.tags === 'string') {
-                        tagValues = task.tags.split(',');
-                    } else if (Array.isArray(task.tags)) {
-                        tagValues = task.tags;
-                    }
-                    
-                    tagsHTML = tagValues.map(tag => {
-                        const tagIcon = getTagIcon(tag);
-                        return `<a href="tags.html?tag=${encodeURIComponent(tag)}" class="task-tag">${tagIcon}${tag}</a>`;
-                    }).join('');
+                if (task.tags && task.tags.length > 0) {
+                    // Handle tags whether they're text or array
+                    let tagList = Array.isArray(task.tags) ? task.tags : task.tags.split(',');
+                    tagsHTML = tagList.map(tag => 
+                        `<a href="tags.html?tag=${tag}" class="task-tag">${tag}</a>`
+                    ).join('');
                 }
                 
-                // Create due date HTML
+                // Format the due date nicely
                 let dueDateHTML = '';
                 if (task.dueDate) {
-                    dueDateHTML = `<a href="calendar.html?date=${encodeURIComponent(task.dueDate)}" class="task-detail">
-                        <svg class="task-detail-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M19 4H5C3.89543 4 3 4.89543 3 6V20C3 21.1046 3.89543 22 5 22H19C20.1046 22 21 21.1046 21 20V6C21 4.89543 20.1046 4 19 4Z" stroke="#6C757D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M16 2V6" stroke="#6C757D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M8 2V6" stroke="#6C757D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M3 10H21" stroke="#6C757D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                        ${formatDate(task.dueDate)}</a>`;
+                    dueDateHTML = `<a href="calendar.html?date=${task.dueDate}" class="task-detail">
+                        📅 ${formatDate(task.dueDate)}</a>`;
                 }
                 
+                // Put it all together!
                 taskItem.innerHTML = `
                     <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''} data-index="${index}">
                     <div class="task-content">
@@ -452,7 +440,7 @@
                 taskList.appendChild(taskItem);
             });
             
-            // Add event listeners to checkboxes
+            // Make the checkboxes work
             document.querySelectorAll('.task-checkbox').forEach(checkbox => {
                 checkbox.addEventListener('change', function() {
                     const index = parseInt(this.getAttribute('data-index'));
@@ -462,53 +450,21 @@
             });
         }
         
-        // Function to get tag icon
-        function getTagIcon(tag) {
-            const tagIcons = {
-                'work': `<svg class="tag-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M20 7L12 3L4 7M20 7L12 11M20 7V17L12 21M12 11L4 7M12 11V21M4 7V17L12 21" stroke="#5E60CE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>`,
-                'personal': `<svg class="tag-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="#5E60CE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z" stroke="#5E60CE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>`,
-                'shopping': `<svg class="tag-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M9 22C9.55228 22 10 21.5523 10 21C10 20.4477 9.55228 20 9 20C8.44772 20 8 20.4477 8 21C8 21.5523 8.44772 22 9 22Z" stroke="#5E60CE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M20 22C20.5523 22 21 21.5523 21 21C21 20.4477 20.5523 20 20 20C19.4477 20 19 20.4477 19 21C19 21.5523 19.4477 22 20 22Z" stroke="#5E60CE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M1 1H5L7.68 14.39C7.77144 14.8504 8.02191 15.264 8.38755 15.5583C8.75318 15.8526 9.2107 16.009 9.68 16H19.4C19.8693 16.009 20.3268 15.8526 20.6925 15.5583C21.0581 15.264 21.3086 14.8504 21.4 14.39L23 6H6" stroke="#5E60CE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>`,
-                'health': `<svg class="tag-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M22 12H18L15 21L9 3L6 12H2" stroke="#5E60CE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>`
-            };
-            
-            return tagIcons[tag] || `<svg class="tag-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M9 5H7C5.89543 5 5 5.89543 5 7V19C5 20.1046 5.89543 21 7 21H17C18.1046 21 19 20.1046 19 19V7C19 5.89543 18.1046 5 17 5H15M9 5C9 6.10457 9.89543 7 11 7H13C14.1046 7 15 6.10457 15 5M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5" stroke="#5E60CE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>`;
-        }
-        
-        // Function to format date
+        // Make dates look nice (like "Sep 15" instead of "2023-09-15")
         function formatDate(dateString) {
             const options = { month: 'short', day: 'numeric' };
             return new Date(dateString).toLocaleDateString('en-US', options);
         }
         
-        // Handle URL parameters for new tasks (for backward compatibility)
+        // Handle adding tasks from URL (learned about URL parameters in class!)
         const urlParams = new URLSearchParams(window.location.search);
-        const taskParam = urlParams.get('task');
-        const priorityParam = urlParams.get('priority');
-        const tagsParam = urlParams.get('tags');
-        const dueDateParam = urlParams.get('dueDate');
-        const descriptionParam = urlParams.get('description');
-        
-        if (taskParam) {
-            // Add new task
+        if (urlParams.get('task')) {
             const newTask = {
-                title: taskParam,
-                priority: priorityParam || 'medium',
-                tags: tagsParam || '',
-                dueDate: dueDateParam || '',
-                description: descriptionParam || '',
+                title: urlParams.get('task'),
+                priority: urlParams.get('priority') || 'medium',
+                tags: urlParams.get('tags') || '',
+                dueDate: urlParams.get('dueDate') || '',
+                description: urlParams.get('description') || '',
                 completed: false,
                 createdAt: new Date().toISOString()
             };
@@ -516,7 +472,7 @@
             tasks.push(newTask);
             saveTasks();
             
-            // Clear URL parameters
+            // Clean up the URL after adding the task
             window.history.replaceState({}, document.title, window.location.pathname);
         }
     </script>

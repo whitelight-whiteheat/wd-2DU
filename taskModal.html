@@ -270,65 +270,68 @@
     </div>
     
     <script>
-        // Get existing tasks from localStorage
+        // Get tasks from browser storage (learned about this in class!)
         function getTasks() {
             return JSON.parse(localStorage.getItem('tasks')) || [];
         }
         
-        // Save tasks to localStorage
+        // Save tasks back to browser storage
         function saveTasks(tasks) {
             localStorage.setItem('tasks', JSON.stringify(tasks));
         }
         
-        // Handle tag selection
+        // Make the tag buttons clickable
         document.querySelectorAll('.tag-option').forEach(tag => {
             tag.addEventListener('click', function() {
+                // Toggle the selected class on and off
                 this.classList.toggle('selected');
             });
         });
         
-        // Handle form submission
+        // Handle what happens when the form is submitted
         document.getElementById('taskForm').addEventListener('submit', function(e) {
+            // Stop the form from actually submitting
             e.preventDefault();
             
-            // Get form values
+            // Get all the values from the form
             const title = document.getElementById('taskTitle').value;
             const description = document.getElementById('taskDescription').value;
             const priority = document.getElementById('taskPriority').value;
             const dueDate = document.getElementById('taskDueDate').value;
             
-            // Get selected tags
+            // Get all the selected tags
             const selectedTags = Array.from(document.querySelectorAll('.tag-option.selected'))
                 .map(tag => tag.getAttribute('data-tag'));
             
-            // Create new task object
+            // Create a new task with all the info
             const newTask = {
-                title,
-                description,
-                priority,
-                dueDate,
+                title: title,
+                description: description,
+                priority: priority,
+                dueDate: dueDate,
                 tags: selectedTags,
                 completed: false,
-                createdAt: new Date().toISOString()
+                createdAt: new Date().toISOString()  // When the task was created
             };
             
-            // Get existing tasks and add new task
+            // Add the new task to our list
             const tasks = getTasks();
             tasks.push(newTask);
             
-            // Save to localStorage
+            // Save everything back to storage
             saveTasks(tasks);
             
-            // Notify parent window
+            // Tell the main page we added a task
             if (window.opener) {
                 window.opener.postMessage('taskAdded', '*');
             }
             
-            // Close modal
+            // Close the add task window
             window.close();
         });
         
-        // Set today's date as min date for due date
+        // When the page loads, set today as the minimum date
+        // (Can't set due dates in the past!)
         document.addEventListener('DOMContentLoaded', function() {
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('taskDueDate').min = today;
