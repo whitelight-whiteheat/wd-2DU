@@ -254,7 +254,7 @@
                 <button class="nav-button" onclick="window.open('searchModal.html', 'Search', 'width=500,height=600')">
                     <span class="search-icon">🔍</span> Search Tasks
                 </button>
-                <button class="nav-button" onclick="window.open('taskModal.html', 'Add Task', 'width=500,height=400')">
+                <button class="nav-button" id="addTaskBtn">
                     <span class="plus-icon">+</span> Add Task
                 </button>
             </div>
@@ -283,13 +283,39 @@
         <div class="empty-state" id="emptyState">
             <div class="empty-state-icon">📝</div>
             <div class="empty-state-message">No tasks for today</div>
-            <a href="#" class="add-task-link" onclick="window.open('taskModal.html', 'Add Task', 'width=500,height=400')">Add Task</a>
+            <a href="#" class="add-task-link" id="addTaskLink">Add Task</a>
         </div>
     </main>
 
     <script>
         // Task management functionality
         let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        
+        // Function to open task modal
+        function openTaskModal() {
+            const modalWindow = window.open('taskModal.html', 'Add Task', 'width=500,height=600');
+            if (modalWindow) {
+                modalWindow.focus();
+            } else {
+                alert('Please allow popups for this site to add tasks.');
+            }
+        }
+        
+        // Add event listeners for task buttons
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('addTaskBtn').addEventListener('click', openTaskModal);
+            document.getElementById('addTaskLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                openTaskModal();
+            });
+            
+            // Load tasks from localStorage
+            tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            
+            // Update UI
+            updateTaskCounts();
+            renderTasks();
+        });
         
         // Function to save tasks to localStorage
         function saveTasks() {
@@ -407,16 +433,6 @@
             // Clear URL parameters
             window.history.replaceState({}, document.title, window.location.pathname);
         }
-        
-        // Initialize the page
-        document.addEventListener('DOMContentLoaded', function() {
-            // Load tasks from localStorage
-            tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-            
-            // Update UI
-            updateTaskCounts();
-            renderTasks();
-        });
     </script>
 </body>
 </html> 

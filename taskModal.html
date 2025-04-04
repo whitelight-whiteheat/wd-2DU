@@ -263,8 +263,12 @@
             // Save back to localStorage
             localStorage.setItem('tasks', JSON.stringify(tasks));
             
-            // Refresh the main page
-            window.opener.location.reload();
+            // Refresh the main page if it exists
+            if (window.opener && !window.opener.closed) {
+                window.opener.location.reload();
+            }
+            
+            // Close this window
             window.close();
             
             return false;
