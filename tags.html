@@ -195,6 +195,13 @@
             height: 16px;
             margin-right: 5px;
         }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
@@ -211,18 +218,22 @@
                 <p>Organize your work</p>
             </div>
         </div>
-        <nav>
-            <ul>
-                <li><a href="index.html">Project</a></li>
-                <li><a href="calendar.html">Calendar</a></li>
-                <li><a href="tags.html" class="active">Tags</a></li>
-            </ul>
+        
+        <div class="action-buttons">
             <button class="nav-button" onclick="window.open('searchModal.html', 'Search', 'width=500,height=600')">
                 <span class="search-icon" aria-hidden="true">🔍</span> Search Tasks
             </button>
             <button class="nav-button" onclick="window.open('taskModal.html', 'Add Task', 'width=500,height=400')">
                 <span class="plus-icon" aria-hidden="true">+</span> Add Task
             </button>
+        </div>
+        
+        <nav>
+            <ul>
+                <li><a href="index.html">Today</a></li>
+                <li><a href="calendar.html">Calendar</a></li>
+                <li><a href="tags.html" class="active">Tags</a></li>
+            </ul>
         </nav>
     </div>
 
@@ -300,6 +311,27 @@
                 // Add active class to clicked button
                 this.classList.add('active');
             });
+        });
+        
+        // Check for tag parameter in URL and pre-select the tag
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const tagParam = urlParams.get('tag');
+            
+            if (tagParam) {
+                // Find the tag element with the matching text
+                const tagElements = document.querySelectorAll('.tag');
+                tagElements.forEach(tagElement => {
+                    const tagText = tagElement.querySelector('span:not(.tag-count)').textContent.trim();
+                    if (tagText.toLowerCase() === tagParam.toLowerCase()) {
+                        // Add active class to the tag
+                        tagElement.classList.add('active');
+                        
+                        // Scroll the tag into view
+                        tagElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                });
+            }
         });
     </script>
 </body>

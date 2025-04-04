@@ -87,14 +87,21 @@
         }
 
         .task-tag {
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            gap: 4px;
-            padding: 2px 6px;
             background-color: rgba(94, 96, 206, 0.1);
             color: var(--primary-color);
-            border-radius: 10px;
-            font-size: 0.75rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 1rem;
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .task-tag:hover {
+            background-color: rgba(94, 96, 206, 0.2);
+            text-decoration: none;
         }
 
         .tag-icon {
@@ -202,6 +209,13 @@
             border-top: 1px solid var(--border-color);
         }
         
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
         .logo-img {
             width: 40px;
             height: 40px;
@@ -249,20 +263,22 @@
                 <p>Organize your work</p>
             </div>
         </div>
+        
+        <div class="action-buttons">
+            <button class="nav-button" onclick="window.open('searchModal.html', 'Search', 'width=500,height=600')">
+                <span class="search-icon">🔍</span> Search Tasks
+            </button>
+            <button class="nav-button" id="addTaskBtn">
+                <span class="plus-icon">+</span> Add Task
+            </button>
+        </div>
+        
         <nav>
             <ul>
                 <li><a href="index.html" class="active">Today</a></li>
                 <li><a href="calendar.html">Calendar</a></li>
                 <li><a href="tags.html">Tags</a></li>
             </ul>
-            <div class="nav-buttons">
-                <button class="nav-button" onclick="window.open('searchModal.html', 'Search', 'width=500,height=600')">
-                    <span class="search-icon">🔍</span> Search Tasks
-                </button>
-                <button class="nav-button" id="addTaskBtn">
-                    <span class="plus-icon">+</span> Add Task
-                </button>
-            </div>
         </nav>
     </div>
 
@@ -386,7 +402,7 @@
                     
                     tagsHTML = tagValues.map(tag => {
                         const tagIcon = getTagIcon(tag);
-                        return `<span class="task-tag">${tagIcon}${tag}</span>`;
+                        return `<a href="tags.html?tag=${encodeURIComponent(tag)}" class="task-tag">${tagIcon}${tag}</a>`;
                     }).join('');
                 }
                 
