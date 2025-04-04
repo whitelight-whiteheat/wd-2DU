@@ -381,7 +381,7 @@
             return new Date(dateString).toLocaleDateString('en-US', options);
         }
         
-        // Handle URL parameters for new tasks
+        // Handle URL parameters for new tasks (for backward compatibility)
         const urlParams = new URLSearchParams(window.location.search);
         const taskParam = urlParams.get('task');
         const priorityParam = urlParams.get('priority');
@@ -409,8 +409,14 @@
         }
         
         // Initialize the page
-        updateTaskCounts();
-        renderTasks();
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load tasks from localStorage
+            tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            
+            // Update UI
+            updateTaskCounts();
+            renderTasks();
+        });
     </script>
 </body>
 </html> 

@@ -243,17 +243,28 @@
             const dueDate = document.getElementById('dueDate').value;
             const description = document.getElementById('description').value;
             
-            // Build URL with parameters
-            const params = new URLSearchParams({
-                task: taskTitle,
+            // Create new task object
+            const newTask = {
+                title: taskTitle,
                 priority: priority,
                 tags: tags,
                 dueDate: dueDate,
-                description: description
-            });
+                description: description,
+                completed: false,
+                createdAt: new Date().toISOString()
+            };
             
-            // Redirect to main page with parameters
-            window.opener.location.href = `index.html?${params.toString()}`;
+            // Get existing tasks from localStorage
+            let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            
+            // Add new task
+            tasks.push(newTask);
+            
+            // Save back to localStorage
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            
+            // Refresh the main page
+            window.opener.location.reload();
             window.close();
             
             return false;
