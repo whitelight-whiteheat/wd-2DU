@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Search tasks in the task management application">
-    <title>Search Tasks - Task Manager</title>
+    <title>Search Tasks - 2DU</title>
     <link rel="stylesheet" href="css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
@@ -12,7 +12,7 @@
             font-family: 'Roboto', sans-serif;
             background-color: var(--light-color);
             margin: 0;
-            padding: 20px;
+            padding: 0;
             color: var(--text-color);
         }
         
@@ -21,8 +21,8 @@
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow);
             padding: 20px;
-            max-width: 500px;
-            margin: 0 auto;
+            max-width: 600px;
+            margin: 20px auto;
         }
         
         .search-header {
@@ -39,6 +39,14 @@
             font-weight: 500;
             color: var(--dark-color);
             margin: 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .search-header h1 svg {
+            margin-right: 10px;
+            width: 24px;
+            height: 24px;
         }
         
         .close-button {
@@ -82,45 +90,6 @@
             color: var(--text-light);
             width: 16px;
             height: 16px;
-        }
-        
-        .filter-section {
-            margin-bottom: 20px;
-        }
-        
-        .filter-section h2 {
-            font-size: 1rem;
-            font-weight: 500;
-            margin-bottom: 10px;
-            color: var(--dark-color);
-        }
-        
-        .filter-options {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        
-        .filter-option {
-            padding: 8px 12px;
-            background-color: white;
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        
-        .filter-option:hover {
-            background-color: rgba(94, 96, 206, 0.05);
-            border-color: var(--primary-color);
-            color: var(--primary-color);
-        }
-        
-        .filter-option.active {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-            color: white;
         }
         
         .search-results {
@@ -174,113 +143,186 @@
             color: var(--text-light);
         }
         
-        .search-button {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 10px 20px;
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .action-button {
+            padding: 10px 15px;
             border-radius: var(--border-radius);
             font-weight: 500;
             cursor: pointer;
             transition: var(--transition);
-            width: 100%;
-            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
         }
         
-        .search-button:hover {
+        .primary-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+        }
+        
+        .primary-button:hover {
             background-color: var(--secondary-color);
+        }
+        
+        .secondary-button {
+            background-color: white;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+        }
+        
+        .secondary-button:hover {
+            background-color: rgba(94, 96, 206, 0.05);
+        }
+        
+        .button-icon {
+            margin-right: 8px;
+            width: 16px;
+            height: 16px;
         }
     </style>
 </head>
 <body>
     <div class="search-container">
         <div class="search-header">
-            <h1>Search Tasks</h1>
+            <h1>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="#5E60CE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Search Tasks
+            </h1>
             <button class="close-button" onclick="window.close()">×</button>
         </div>
         
-        <form id="searchForm" action="#" method="get">
+        <form id="searchForm">
             <div class="search-input-container">
-                <input type="text" id="searchInput" class="search-input" placeholder="Search for tasks...">
+                <input type="text" id="searchInput" class="search-input" placeholder="Search for tasks..." autofocus>
                 <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="#6C757D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </div>
-            
-            <div class="filter-section">
-                <h2>Filter by Priority</h2>
-                <input type="hidden" id="priorityFilter" name="priority" value="all">
-                <div class="filter-options">
-                    <div class="filter-option active" data-value="all">All</div>
-                    <div class="filter-option" data-value="high">High</div>
-                    <div class="filter-option" data-value="medium">Medium</div>
-                    <div class="filter-option" data-value="low">Low</div>
-                </div>
-            </div>
-            
-            <div class="filter-section">
-                <h2>Filter by Date</h2>
-                <input type="hidden" id="dateFilter" name="date" value="all">
-                <div class="filter-options">
-                    <div class="filter-option active" data-value="all">All</div>
-                    <div class="filter-option" data-value="today">Today</div>
-                    <div class="filter-option" data-value="week">This Week</div>
-                    <div class="filter-option" data-value="month">This Month</div>
-                </div>
-            </div>
-            
-            <button type="submit" class="search-button">Search</button>
         </form>
         
         <div class="search-results">
             <h2>Search Results</h2>
-            <div class="result-item">
-                <div class="result-title">Complete project documentation</div>
-                <div class="result-meta">
-                    <span>Due: Sep 15, 2023</span>
-                    <span class="result-tag">Work</span>
-                </div>
+            <div id="resultsContainer">
+                <!-- Results will be dynamically added here -->
             </div>
-            <div class="result-item">
-                <div class="result-title">Buy groceries</div>
-                <div class="result-meta">
-                    <span>Due: Sep 10, 2023</span>
-                    <span class="result-tag">Shopping</span>
-                </div>
-            </div>
-            <div class="result-item">
-                <div class="result-title">Schedule doctor appointment</div>
-                <div class="result-meta">
-                    <span>Due: Sep 20, 2023</span>
-                    <span class="result-tag">Health</span>
-                </div>
-            </div>
+        </div>
+        
+        <div class="action-buttons">
+            <button class="action-button primary-button" id="performSearch">
+                <svg class="button-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Search
+            </button>
+            <button class="action-button secondary-button" onclick="window.open('taskModal.html', 'Add Task', 'width=500,height=600')">
+                <svg class="button-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 5V19M5 12H19" stroke="#5E60CE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Add Task
+            </button>
         </div>
     </div>
     
     <script>
-        // Simple filter functionality
-        document.querySelectorAll('.filter-option').forEach(option => {
-            option.addEventListener('click', function() {
-                // Remove active class from all options in the same filter section
-                const filterSection = this.parentElement;
-                filterSection.querySelectorAll('.filter-option').forEach(opt => {
-                    opt.classList.remove('active');
-                });
-                // Add active class to clicked option
-                this.classList.add('active');
-                
-                // Update hidden input value
-                const filterType = this.closest('.filter-section').querySelector('h2').textContent.toLowerCase().includes('priority') ? 'priorityFilter' : 'dateFilter';
-                document.getElementById(filterType).value = this.getAttribute('data-value');
-            });
-        });
+        // Get tasks from localStorage
+        function getTasks() {
+            return JSON.parse(localStorage.getItem('tasks')) || [];
+        }
         
-        // Form submission
+        // Search functionality
+        function performSearch() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const tasks = getTasks();
+            const resultsContainer = document.getElementById('resultsContainer');
+            
+            // Clear previous results
+            resultsContainer.innerHTML = '';
+            
+            if (!searchTerm) {
+                resultsContainer.innerHTML = '<div class="empty-results">Please enter a search term</div>';
+                return;
+            }
+            
+            // Filter tasks based on search term
+            const filteredTasks = tasks.filter(task => 
+                task.title.toLowerCase().includes(searchTerm) || 
+                (task.description && task.description.toLowerCase().includes(searchTerm))
+            );
+            
+            if (filteredTasks.length === 0) {
+                resultsContainer.innerHTML = '<div class="empty-results">No tasks found matching your search</div>';
+                return;
+            }
+            
+            // Display filtered tasks
+            filteredTasks.forEach(task => {
+                // Create tags HTML
+                let tagsHTML = '';
+                if (task.tags) {
+                    // Handle both string and array formats
+                    let tagValues = [];
+                    if (typeof task.tags === 'string') {
+                        tagValues = task.tags.split(',');
+                    } else if (Array.isArray(task.tags)) {
+                        tagValues = task.tags;
+                    }
+                    
+                    tagsHTML = tagValues.map(tag => {
+                        return `<span class="result-tag">${tag}</span>`;
+                    }).join('');
+                }
+                
+                // Create due date HTML
+                let dueDateHTML = '';
+                if (task.dueDate) {
+                    const options = { month: 'short', day: 'numeric' };
+                    const formattedDate = new Date(task.dueDate).toLocaleDateString('en-US', options);
+                    dueDateHTML = `<span>Due: ${formattedDate}</span>`;
+                }
+                
+                const resultItem = document.createElement('div');
+                resultItem.className = 'result-item';
+                resultItem.innerHTML = `
+                    <div class="result-title">${task.title}</div>
+                    <div class="result-meta">
+                        ${dueDateHTML}
+                        ${tagsHTML}
+                    </div>
+                `;
+                
+                resultsContainer.appendChild(resultItem);
+            });
+        }
+        
+        // Add event listeners
         document.getElementById('searchForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            // In a real application, this would perform the search
-            alert('Search functionality would be implemented here');
+            performSearch();
+        });
+        
+        document.getElementById('performSearch').addEventListener('click', function() {
+            performSearch();
+        });
+        
+        // Auto-search as user types
+        document.getElementById('searchInput').addEventListener('input', function() {
+            if (this.value.length > 2) {
+                performSearch();
+            }
+        });
+        
+        // Focus search input on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('searchInput').focus();
         });
     </script>
 </body>
