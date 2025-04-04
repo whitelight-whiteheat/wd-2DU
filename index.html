@@ -312,8 +312,10 @@
             // Listen for messages from the task modal
             window.addEventListener('message', function(event) {
                 if (event.data === 'taskAdded') {
+                    console.log('Received taskAdded message');
                     // Reload tasks from localStorage
                     tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+                    console.log('Tasks after reload:', tasks);
                     updateTaskCounts();
                     renderTasks();
                 }
@@ -321,6 +323,7 @@
             
             // Load tasks from localStorage
             tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            console.log('Initial tasks:', tasks);
             
             // Update UI
             updateTaskCounts();
@@ -342,14 +345,21 @@
             document.getElementById('totalTasks').textContent = totalTasks;
             document.getElementById('completedTasks').textContent = completedTasks;
             
-            // Show/hide empty state
-            document.getElementById('emptyState').style.display = totalTasks === 0 ? 'block' : 'none';
+            // We'll handle empty state display in renderTasks instead
         }
         
         // Function to render tasks
         function renderTasks() {
             const taskList = document.getElementById('taskList');
             taskList.innerHTML = '';
+            
+            // Show/hide empty state based on tasks length
+            document.getElementById('emptyState').style.display = tasks.length === 0 ? 'block' : 'none';
+            
+            // If no tasks, return early
+            if (tasks.length === 0) {
+                return;
+            }
             
             tasks.forEach((task, index) => {
                 const taskItem = document.createElement('div');
