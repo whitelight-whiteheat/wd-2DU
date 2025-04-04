@@ -263,9 +263,14 @@
             // Save back to localStorage
             localStorage.setItem('tasks', JSON.stringify(tasks));
             
-            // Refresh the main page if it exists
-            if (window.opener && !window.opener.closed) {
-                window.opener.location.reload();
+            // Try to refresh the main page if it exists
+            try {
+                if (window.opener && !window.opener.closed) {
+                    // Use a safer approach to communicate with the opener
+                    window.opener.postMessage('taskAdded', '*');
+                }
+            } catch (e) {
+                console.log('Could not communicate with opener window:', e);
             }
             
             // Close this window

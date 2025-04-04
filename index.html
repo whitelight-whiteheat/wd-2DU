@@ -309,6 +309,16 @@
                 openTaskModal();
             });
             
+            // Listen for messages from the task modal
+            window.addEventListener('message', function(event) {
+                if (event.data === 'taskAdded') {
+                    // Reload tasks from localStorage
+                    tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+                    updateTaskCounts();
+                    renderTasks();
+                }
+            });
+            
             // Load tasks from localStorage
             tasks = JSON.parse(localStorage.getItem('tasks')) || [];
             
