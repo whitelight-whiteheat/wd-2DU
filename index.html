@@ -370,8 +370,15 @@
                 
                 // Create tags HTML
                 let tagsHTML = '';
-                if (task.tags && task.tags.length > 0) {
-                    const tagValues = task.tags.split(',');
+                if (task.tags) {
+                    // Handle both string and array formats
+                    let tagValues = [];
+                    if (typeof task.tags === 'string') {
+                        tagValues = task.tags.split(',');
+                    } else if (Array.isArray(task.tags)) {
+                        tagValues = task.tags;
+                    }
+                    
                     tagsHTML = tagValues.map(tag => {
                         const tagIcon = getTagIcon(tag);
                         return `<span class="task-tag"><img src="${tagIcon}" alt="" class="tag-icon">${tag}</span>`;

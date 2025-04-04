@@ -239,9 +239,15 @@
             
             const taskTitle = document.getElementById('taskTitle').value;
             const priority = document.getElementById('priority').value;
-            const tags = document.getElementById('tags').value;
+            const tagsValue = document.getElementById('tags').value;
             const dueDate = document.getElementById('dueDate').value;
             const description = document.getElementById('description').value;
+            
+            // Process tags - convert to array if it's a string
+            let tags = [];
+            if (tagsValue) {
+                tags = tagsValue.split(',');
+            }
             
             // Create new task object
             const newTask = {
