@@ -271,6 +271,9 @@
             <button class="nav-button" id="addTaskBtn">
                 <span class="plus-icon">+</span> Add Task
             </button>
+            <button class="nav-button" id="clearAllTasksBtn">
+                <span class="trash-icon">🗑️</span> Clear All Tasks
+            </button>
         </div>
         
         <nav>
@@ -322,6 +325,20 @@
             }
         }
         
+        // Function to clear all tasks
+        function clearAllTasks() {
+            if (tasks.length === 0) {
+                alert('No tasks to clear.');
+                return;
+            }
+            
+            if (confirm('Are you sure you want to clear all tasks? This action cannot be undone.')) {
+                tasks = [];
+                saveTasks();
+                alert('All tasks have been cleared.');
+            }
+        }
+        
         // Add event listeners for task buttons
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('addTaskBtn').addEventListener('click', openTaskModal);
@@ -329,6 +346,7 @@
                 e.preventDefault();
                 openTaskModal();
             });
+            document.getElementById('clearAllTasksBtn').addEventListener('click', clearAllTasks);
             
             // Listen for messages from the task modal
             window.addEventListener('message', function(event) {

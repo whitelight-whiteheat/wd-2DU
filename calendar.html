@@ -245,10 +245,13 @@
         
         <div class="action-buttons">
             <button class="nav-button" onclick="window.open('searchModal.html', 'Search', 'width=500,height=600')">
-                <span class="search-icon">🔍</span> Search Tasks
+                <span class="search-icon" aria-hidden="true">🔍</span> Search Tasks
             </button>
             <button class="nav-button" onclick="window.open('taskModal.html', 'Add Task', 'width=500,height=400')">
-                <span class="plus-icon">+</span> Add Task
+                <span class="plus-icon" aria-hidden="true">+</span> Add Task
+            </button>
+            <button class="nav-button" id="clearAllTasksBtn">
+                <span class="trash-icon" aria-hidden="true">🗑️</span> Clear All Tasks
             </button>
         </div>
         
@@ -308,6 +311,29 @@
     </main>
 
     <script>
+        // Load tasks from localStorage
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        
+        // Function to clear all tasks
+        function clearAllTasks() {
+            if (tasks.length === 0) {
+                alert('No tasks to clear.');
+                return;
+            }
+            
+            if (confirm('Are you sure you want to clear all tasks? This action cannot be undone.')) {
+                tasks = [];
+                localStorage.setItem('tasks', JSON.stringify(tasks));
+                alert('All tasks have been cleared.');
+                renderCalendar(); // Refresh the calendar
+            }
+        }
+        
+        // Add event listener for clear all tasks button
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('clearAllTasksBtn').addEventListener('click', clearAllTasks);
+        });
+        
         // Simple calendar functionality
         document.addEventListener('DOMContentLoaded', function() {
             // Load tasks from localStorage
