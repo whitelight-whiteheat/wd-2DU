@@ -14,12 +14,12 @@
 
 ## Documentation Requirements
 
-| Requirement                            | Status       | Notes                                              |
-| -------------------------------------- | ------------ | -------------------------------------------------- |
-| URL of website                         | ⚠️ Pending   | Need to deploy and provide URL                     |
-| Link to IDE view in repl.it            | ⚠️ Pending   | Need to provide repl.it link                       |
-| Word/PDF document listing requirements | ✅ Completed | This document serves as the requirements checklist |
-| Screenshots of HTML validation         | ⚠️ Pending   | Need to take screenshots of validation results     |
+| Requirement                            | Status       | Notes                                                              |
+| -------------------------------------- | ------------ | ------------------------------------------------------------------ |
+| URL of website                         | ✅ Completed | Website deployed at https://whitelight-whiteheat.github.io/wd-2DU/ |
+| Link to IDE view in repl.it            | ⚠️ Pending   | Need to provide repl.it link                                       |
+| Word/PDF document listing requirements | ✅ Completed | This document serves as the requirements checklist                 |
+| Screenshots of HTML validation         | ✅ Completed | Screenshots of validation results saved in validation folder       |
 
 ## Additional Notes
 
@@ -30,9 +30,10 @@
 - The code is kept simple and straightforward for easy understanding
 - All required pages have been created: project.html, calendar.html, tags.html, taskDisplay.html, searchModal.html, and taskModal.html
 - HTML validation issues have been fixed in all files
+- The application has been successfully deployed to GitHub Pages
 
 ## Next Steps
 
-1. Take screenshots of validation results
-2. Deploy the application and provide the URL
-3. Provide link to IDE view in repl.it
+1. Provide link to IDE view in repl.it
+2. Final review of the application functionality
+3. Submit the project
