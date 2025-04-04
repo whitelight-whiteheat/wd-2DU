@@ -3,329 +3,261 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Add a new task to the task management application">
-    <title>Add Task - Task Manager</title>
+    <meta name="description" content="Add a new task">
+    <title>Add Task</title>
     <link rel="stylesheet" href="css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: var(--light-color);
-            margin: 0;
-            padding: 20px;
-            color: var(--text-color);
-        }
-        
-        .task-form-container {
+        .modal-content {
             background-color: white;
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow);
-            padding: 20px;
+            padding: 2rem;
             max-width: 500px;
-            margin: 0 auto;
+            width: 100%;
+            margin: 2rem auto;
         }
-        
-        .form-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--border-color);
+
+        .modal-header {
+            margin-bottom: 1.5rem;
         }
-        
-        .form-header h1 {
+
+        .modal-header h2 {
+            color: var(--dark-color);
             font-size: 1.5rem;
             font-weight: 500;
-            color: var(--dark-color);
-            margin: 0;
+            margin-bottom: 0.5rem;
         }
-        
-        .close-button {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--text-light);
-            transition: var(--transition);
-        }
-        
-        .close-button:hover {
-            color: var(--dark-color);
-        }
-        
+
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 1.5rem;
         }
-        
+
         .form-group label {
             display: block;
-            margin-bottom: 8px;
+            color: var(--text-color);
             font-weight: 500;
-            color: var(--dark-color);
+            margin-bottom: 0.5rem;
         }
-        
+
         .form-control {
             width: 100%;
-            padding: 12px 15px;
+            padding: 0.75rem;
             border: 1px solid var(--border-color);
             border-radius: var(--border-radius);
             font-size: 1rem;
             transition: var(--transition);
         }
-        
+
         .form-control:focus {
             outline: none;
             border-color: var(--primary-color);
             box-shadow: 0 0 0 2px rgba(94, 96, 206, 0.1);
         }
-        
-        .form-select {
-            width: 100%;
-            padding: 12px 15px;
+
+        .priority-options {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .priority-option {
+            flex: 1;
+            padding: 0.75rem;
             border: 1px solid var(--border-color);
             border-radius: var(--border-radius);
-            font-size: 1rem;
-            background-color: white;
+            text-align: center;
+            cursor: pointer;
             transition: var(--transition);
-            appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 15px center;
-            background-size: 15px;
         }
-        
-        .form-select:focus {
-            outline: none;
+
+        .priority-option:hover {
+            background-color: rgba(94, 96, 206, 0.05);
+        }
+
+        .priority-option.selected {
+            background-color: var(--primary-color);
+            color: white;
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(94, 96, 206, 0.1);
         }
-        
+
         .tag-options {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 10px;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
         }
-        
+
         .tag-option {
-            padding: 8px 12px;
-            background-color: white;
+            padding: 0.5rem 1rem;
             border: 1px solid var(--border-color);
             border-radius: var(--border-radius);
-            font-size: 0.9rem;
             cursor: pointer;
             transition: var(--transition);
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 0.5rem;
         }
-        
+
         .tag-option:hover {
             background-color: rgba(94, 96, 206, 0.05);
+        }
+
+        .tag-option.selected {
+            background-color: rgba(94, 96, 206, 0.1);
             border-color: var(--primary-color);
             color: var(--primary-color);
         }
-        
-        .tag-option.selected {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-            color: white;
-        }
-        
+
         .tag-icon {
             width: 16px;
             height: 16px;
+            opacity: 0.7;
         }
-        
-        .priority-options {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        
-        .priority-option {
-            flex: 1;
-            padding: 10px;
-            text-align: center;
-            background-color: white;
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        
-        .priority-option:hover {
-            background-color: rgba(94, 96, 206, 0.05);
-            border-color: var(--primary-color);
-            color: var(--primary-color);
-        }
-        
-        .priority-option.selected {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-            color: white;
-        }
-        
-        .priority-high {
-            border-color: var(--danger-color);
-            color: var(--danger-color);
-        }
-        
-        .priority-high:hover, .priority-high.selected {
-            background-color: var(--danger-color);
-            color: white;
-        }
-        
-        .priority-medium {
-            border-color: var(--warning-color);
-            color: var(--warning-color);
-        }
-        
-        .priority-medium:hover, .priority-medium.selected {
-            background-color: var(--warning-color);
-            color: white;
-        }
-        
-        .priority-low {
-            border-color: var(--success-color);
-            color: var(--success-color);
-        }
-        
-        .priority-low:hover, .priority-low.selected {
-            background-color: var(--success-color);
-            color: white;
-        }
-        
-        .form-actions {
+
+        .modal-actions {
             display: flex;
             justify-content: flex-end;
-            gap: 10px;
-            margin-top: 20px;
+            gap: 1rem;
+            margin-top: 2rem;
         }
-        
-        .cancel-button {
-            padding: 10px 20px;
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-secondary {
             background-color: white;
             border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
+            color: var(--text-color);
         }
-        
-        .cancel-button:hover {
+
+        .btn-secondary:hover {
             background-color: rgba(94, 96, 206, 0.05);
-            border-color: var(--primary-color);
-            color: var(--primary-color);
         }
-        
-        .submit-button {
-            padding: 10px 20px;
+
+        .btn-primary {
             background-color: var(--primary-color);
-            color: white;
             border: none;
-            border-radius: var(--border-radius);
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
+            color: white;
         }
-        
-        .submit-button:hover {
+
+        .btn-primary:hover {
             background-color: var(--secondary-color);
+        }
+
+        .hidden {
+            display: none;
         }
     </style>
 </head>
 <body>
-    <div class="task-form-container">
-        <div class="form-header">
-            <h1>Add New Task</h1>
-            <button class="close-button" onclick="window.close()">×</button>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Add New Task</h2>
+            <p>Fill in the details below to create a new task</p>
         </div>
-        
-        <form id="taskForm" action="taskDisplay.html" method="get">
+        <form id="taskForm" onsubmit="return handleSubmit(event)">
             <div class="form-group">
                 <label for="taskTitle">Task Title</label>
-                <input type="text" id="taskTitle" name="task" class="form-control" placeholder="Enter task title" required>
+                <input type="text" id="taskTitle" class="form-control" required>
             </div>
-            
-            <div class="form-group">
-                <label for="dueDate">Due Date</label>
-                <input type="date" id="dueDate" name="dueDate" class="form-control">
-            </div>
-            
             <div class="form-group">
                 <label>Priority</label>
-                <input type="hidden" id="priority" name="priority" value="medium">
                 <div class="priority-options">
-                    <div class="priority-option priority-high" data-value="high">High</div>
-                    <div class="priority-option priority-medium selected" data-value="medium">Medium</div>
-                    <div class="priority-option priority-low" data-value="low">Low</div>
+                    <div class="priority-option" data-priority="high">High</div>
+                    <div class="priority-option selected" data-priority="medium">Medium</div>
+                    <div class="priority-option" data-priority="low">Low</div>
                 </div>
+                <input type="hidden" id="priority" name="priority" value="medium">
             </div>
-            
             <div class="form-group">
                 <label>Tags</label>
-                <input type="hidden" id="tags" name="tags" value="">
                 <div class="tag-options">
-                    <div class="tag-option" data-value="work">
-                        <img src="images/work-icon.png" alt="" class="tag-icon">
-                        <span>Work</span>
+                    <div class="tag-option" data-tag="work">
+                        <img src="images/work-icon.png" alt="" class="tag-icon">Work
                     </div>
-                    <div class="tag-option" data-value="personal">
-                        <img src="images/personal-icon.png" alt="" class="tag-icon">
-                        <span>Personal</span>
+                    <div class="tag-option" data-tag="personal">
+                        <img src="images/personal-icon.png" alt="" class="tag-icon">Personal
                     </div>
-                    <div class="tag-option" data-value="shopping">
-                        <img src="images/shopping-icon.png" alt="" class="tag-icon">
-                        <span>Shopping</span>
+                    <div class="tag-option" data-tag="shopping">
+                        <img src="images/shopping-icon.png" alt="" class="tag-icon">Shopping
                     </div>
-                    <div class="tag-option" data-value="health">
-                        <img src="images/health-icon.png" alt="" class="tag-icon">
-                        <span>Health</span>
+                    <div class="tag-option" data-tag="health">
+                        <img src="images/health-icon.png" alt="" class="tag-icon">Health
                     </div>
                 </div>
+                <input type="hidden" id="tags" name="tags" value="">
             </div>
-            
+            <div class="form-group">
+                <label for="dueDate">Due Date</label>
+                <input type="date" id="dueDate" class="form-control">
+            </div>
             <div class="form-group">
                 <label for="description">Description</label>
-                <textarea id="description" name="description" class="form-control" rows="4" placeholder="Enter task description"></textarea>
+                <textarea id="description" class="form-control" rows="3"></textarea>
             </div>
-            
-            <div class="form-actions">
-                <button type="button" class="cancel-button" onclick="window.close()">Cancel</button>
-                <button type="submit" class="submit-button">Add Task</button>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" onclick="window.close()">Cancel</button>
+                <button type="submit" class="btn btn-primary">Add Task</button>
             </div>
         </form>
     </div>
-    
+
     <script>
-        // Simple form functionality
+        // Handle priority selection
         document.querySelectorAll('.priority-option').forEach(option => {
             option.addEventListener('click', function() {
-                // Remove selected class from all options
-                document.querySelectorAll('.priority-option').forEach(opt => {
-                    opt.classList.remove('selected');
-                });
-                // Add selected class to clicked option
+                document.querySelectorAll('.priority-option').forEach(opt => opt.classList.remove('selected'));
                 this.classList.add('selected');
-                // Update hidden input value
-                document.getElementById('priority').value = this.getAttribute('data-value');
+                document.getElementById('priority').value = this.getAttribute('data-priority');
             });
         });
-        
+
+        // Handle tag selection
         document.querySelectorAll('.tag-option').forEach(option => {
             option.addEventListener('click', function() {
-                // Toggle selected class
                 this.classList.toggle('selected');
-                
-                // Update hidden input value with all selected tags
-                const selectedTags = Array.from(document.querySelectorAll('.tag-option.selected'))
-                    .map(tag => tag.getAttribute('data-value'))
-                    .join(',');
-                document.getElementById('tags').value = selectedTags;
+                updateSelectedTags();
             });
         });
+
+        // Update selected tags
+        function updateSelectedTags() {
+            const selectedTags = Array.from(document.querySelectorAll('.tag-option.selected'))
+                .map(option => option.getAttribute('data-tag'));
+            document.getElementById('tags').value = selectedTags.join(',');
+        }
+
+        // Handle form submission
+        function handleSubmit(event) {
+            event.preventDefault();
+            
+            const taskTitle = document.getElementById('taskTitle').value;
+            const priority = document.getElementById('priority').value;
+            const tags = document.getElementById('tags').value;
+            const dueDate = document.getElementById('dueDate').value;
+            const description = document.getElementById('description').value;
+            
+            // Build URL with parameters
+            const params = new URLSearchParams({
+                task: taskTitle,
+                priority: priority,
+                tags: tags,
+                dueDate: dueDate,
+                description: description
+            });
+            
+            // Redirect to main page with parameters
+            window.opener.location.href = `index.html?${params.toString()}`;
+            window.close();
+            
+            return false;
+        }
     </script>
 </body>
 </html> 
