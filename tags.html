@@ -420,6 +420,93 @@
             });
         });
         
+        // Function to load and display tags
+        function loadTags() {
+            // Get all tasks from localStorage
+            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            
+            // Create a map to count tags
+            const tagCounts = {};
+            
+            // Count occurrences of each tag
+            tasks.forEach(task => {
+                if (task.tags) {
+                    // Handle both string and array formats
+                    let tagValues = [];
+                    if (typeof task.tags === 'string') {
+                        tagValues = task.tags.split(',').map(tag => tag.trim());
+                    } else if (Array.isArray(task.tags)) {
+                        tagValues = task.tags;
+                    }
+                    
+                    tagValues.forEach(tag => {
+                        if (tag) {
+                            tagCounts[tag] = (tagCounts[tag] || 0) + 1;
+                        }
+                    });
+                }
+            });
+            
+            // Get the tags container
+            const tagsContainer = document.querySelector('.tags-container');
+            
+            // Clear existing tags
+            tagsContainer.innerHTML = '';
+            
+            // Add tags to the container
+            Object.keys(tagCounts).forEach(tag => {
+                const tagElement = document.createElement('div');
+                tagElement.className = 'tag';
+                tagElement.innerHTML = `
+                    ${getTagIcon(tag)}
+                    <span>${tag}</span>
+                    <span class="tag-count">${tagCounts[tag]}</span>
+                `;
+                
+                // Add click event listener
+                tagElement.addEventListener('click', function() {
+                    // Remove active class from all tags
+                    document.querySelectorAll('.tag').forEach(t => {
+                        t.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked tag
+                    this.classList.add('active');
+                    
+                    // Set the selected tag name
+                    document.getElementById('selectedTagName').textContent = tag;
+                    
+                    // Filter tasks by tag
+                    const filteredTasks = tasks.filter(task => {
+                        if (!task.tags) return false;
+                        
+                        // Handle both string and array formats
+                        if (typeof task.tags === 'string') {
+                            return task.tags.split(',').some(t => 
+                                t.trim().toLowerCase() === tag.toLowerCase()
+                            );
+                        } else if (Array.isArray(task.tags)) {
+                            return task.tags.some(t => 
+                                t.toLowerCase() === tag.toLowerCase()
+                            );
+                        }
+                        
+                        return false;
+                    });
+                    
+                    // Render filtered tasks
+                    renderTasks(filteredTasks);
+                });
+                
+                tagsContainer.appendChild(tagElement);
+            });
+            
+            // If no tags found, show a message
+            if (Object.keys(tagCounts).length === 0) {
+                tagsContainer.innerHTML = '<p>No tags found. Add tasks with tags to see them here.</p>';
+            }
+        }
+        
         // Function to render tasks
         function renderTasks(tasks) {
             const tasksList = document.getElementById('tasksList');
@@ -527,6 +614,9 @@
         
         // Check for tag parameter in URL and pre-select the tag
         document.addEventListener('DOMContentLoaded', function() {
+            // Load tags from localStorage
+            loadTags();
+            
             const urlParams = new URLSearchParams(window.location.search);
             const tagParam = urlParams.get('tag');
             
@@ -571,49 +661,6 @@
                     }
                 });
             }
-            
-            // Add click event listeners to tags
-            document.querySelectorAll('.tag').forEach(tagElement => {
-                tagElement.addEventListener('click', function() {
-                    // Remove active class from all tags
-                    document.querySelectorAll('.tag').forEach(tag => {
-                        tag.classList.remove('active');
-                    });
-                    
-                    // Add active class to clicked tag
-                    this.classList.add('active');
-                    
-                    // Get tag text
-                    const tagText = this.querySelector('span:not(.tag-count)').textContent.trim();
-                    
-                    // Set the selected tag name
-                    document.getElementById('selectedTagName').textContent = tagText;
-                    
-                    // Load tasks from localStorage
-                    const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-                    
-                    // Filter tasks by tag
-                    const filteredTasks = tasks.filter(task => {
-                        if (!task.tags) return false;
-                        
-                        // Handle both string and array formats
-                        if (typeof task.tags === 'string') {
-                            return task.tags.split(',').some(tag => 
-                                tag.trim().toLowerCase() === tagText.toLowerCase()
-                            );
-                        } else if (Array.isArray(task.tags)) {
-                            return task.tags.some(tag => 
-                                tag.toLowerCase() === tagText.toLowerCase()
-                            );
-                        }
-                        
-                        return false;
-                    });
-                    
-                    // Render filtered tasks
-                    renderTasks(filteredTasks);
-                });
-            });
         });
     </script>
 </body>
