@@ -15,6 +15,8 @@
             transition: var(--transition);
             padding: 16px;
             margin-bottom: 12px;
+            display: flex;
+            align-items: flex-start;
         }
 
         .task-item:hover {
@@ -27,16 +29,89 @@
             cursor: pointer;
             width: 18px;
             height: 18px;
+            margin-top: 3px;
+            margin-right: 10px;
+        }
+
+        .task-content {
+            flex: 1;
         }
 
         .task-title {
             color: var(--dark-color);
             font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .task-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 5px;
+            font-size: 0.85rem;
+        }
+
+        .task-detail {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: var(--text-light);
+        }
+
+        .task-detail-icon {
+            width: 14px;
+            height: 14px;
+            opacity: 0.7;
+        }
+
+        .task-priority {
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .priority-high {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: var(--danger-color);
+        }
+
+        .priority-medium {
+            background-color: rgba(255, 193, 7, 0.1);
+            color: var(--warning-color);
+        }
+
+        .priority-low {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: var(--success-color);
+        }
+
+        .task-tag {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 6px;
+            background-color: rgba(94, 96, 206, 0.1);
+            color: var(--primary-color);
+            border-radius: 10px;
+            font-size: 0.75rem;
+        }
+
+        .tag-icon {
+            width: 12px;
+            height: 12px;
+        }
+
+        .task-completed {
+            opacity: 0.6;
+            text-decoration: line-through;
         }
 
         .empty-state-icon {
             color: var(--primary-color);
             opacity: 0.8;
+            font-size: 3rem;
+            margin-bottom: 1rem;
         }
 
         .add-task-link {
@@ -44,6 +119,11 @@
             color: white;
             box-shadow: none;
             font-weight: 500;
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            transition: var(--transition);
         }
 
         .add-task-link:hover {
@@ -140,9 +220,18 @@
             vertical-align: middle;
         }
         
-        .task-content {
-            display: flex;
-            align-items: center;
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            border: 1px dashed var(--border-color);
+        }
+        
+        .empty-state-message {
+            color: var(--text-light);
+            margin-bottom: 1rem;
         }
     </style>
 </head>
@@ -191,7 +280,7 @@
             <!-- Tasks will be dynamically added here -->
         </div>
 
-        <div class="empty-state" id="emptyState" style="display: none;">
+        <div class="empty-state" id="emptyState">
             <div class="empty-state-icon">📝</div>
             <div class="empty-state-message">No tasks for today</div>
             <a href="#" class="add-task-link" onclick="window.open('taskModal.html', 'Add Task', 'width=500,height=400')">Add Task</a>
@@ -199,28 +288,129 @@
     </main>
 
     <script>
-        // Simple script to handle URL parameters
+        // Task management functionality
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        
+        // Function to save tasks to localStorage
+        function saveTasks() {
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            updateTaskCounts();
+            renderTasks();
+        }
+        
+        // Function to update task counts
+        function updateTaskCounts() {
+            const totalTasks = tasks.length;
+            const completedTasks = tasks.filter(task => task.completed).length;
+            
+            document.getElementById('totalTasks').textContent = totalTasks;
+            document.getElementById('completedTasks').textContent = completedTasks;
+            
+            // Show/hide empty state
+            document.getElementById('emptyState').style.display = totalTasks === 0 ? 'block' : 'none';
+        }
+        
+        // Function to render tasks
+        function renderTasks() {
+            const taskList = document.getElementById('taskList');
+            taskList.innerHTML = '';
+            
+            tasks.forEach((task, index) => {
+                const taskItem = document.createElement('div');
+                taskItem.className = 'task-item';
+                
+                // Create priority class
+                const priorityClass = `priority-${task.priority || 'medium'}`;
+                
+                // Create tags HTML
+                let tagsHTML = '';
+                if (task.tags && task.tags.length > 0) {
+                    const tagValues = task.tags.split(',');
+                    tagsHTML = tagValues.map(tag => {
+                        const tagIcon = getTagIcon(tag);
+                        return `<span class="task-tag"><img src="${tagIcon}" alt="" class="tag-icon">${tag}</span>`;
+                    }).join('');
+                }
+                
+                // Create due date HTML
+                let dueDateHTML = '';
+                if (task.dueDate) {
+                    dueDateHTML = `<span class="task-detail"><img src="images/calendar-icon.png" alt="" class="task-detail-icon">${formatDate(task.dueDate)}</span>`;
+                }
+                
+                taskItem.innerHTML = `
+                    <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''} data-index="${index}">
+                    <div class="task-content">
+                        <div class="task-title ${task.completed ? 'task-completed' : ''}">${task.title}</div>
+                        <div class="task-details">
+                            <span class="task-priority ${priorityClass}">${task.priority || 'Medium'}</span>
+                            ${tagsHTML}
+                            ${dueDateHTML}
+                        </div>
+                    </div>
+                `;
+                
+                taskList.appendChild(taskItem);
+            });
+            
+            // Add event listeners to checkboxes
+            document.querySelectorAll('.task-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    tasks[index].completed = this.checked;
+                    saveTasks();
+                });
+            });
+        }
+        
+        // Function to get tag icon
+        function getTagIcon(tag) {
+            const tagIcons = {
+                'work': 'images/work-icon.png',
+                'personal': 'images/personal-icon.png',
+                'shopping': 'images/shopping-icon.png',
+                'health': 'images/health-icon.png'
+            };
+            
+            return tagIcons[tag] || 'images/task-icon.png';
+        }
+        
+        // Function to format date
+        function formatDate(dateString) {
+            const options = { month: 'short', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('en-US', options);
+        }
+        
+        // Handle URL parameters for new tasks
         const urlParams = new URLSearchParams(window.location.search);
         const taskParam = urlParams.get('task');
-
+        const priorityParam = urlParams.get('priority');
+        const tagsParam = urlParams.get('tags');
+        const dueDateParam = urlParams.get('dueDate');
+        const descriptionParam = urlParams.get('description');
+        
         if (taskParam) {
-            // Update task count
-            document.getElementById('totalTasks').textContent = '1';
-            document.getElementById('emptyState').style.display = 'none';
+            // Add new task
+            const newTask = {
+                title: taskParam,
+                priority: priorityParam || 'medium',
+                tags: tagsParam || '',
+                dueDate: dueDateParam || '',
+                description: descriptionParam || '',
+                completed: false,
+                createdAt: new Date().toISOString()
+            };
             
-            // Add the task to the list
-            const taskList = document.getElementById('taskList');
-            const taskItem = document.createElement('div');
-            taskItem.className = 'task-item';
-            taskItem.innerHTML = `
-                <input type="checkbox" class="task-checkbox">
-                <div class="task-content">
-                    <img src="images/task-icon.png" alt="" class="task-img">
-                    <div class="task-title">${taskParam}</div>
-                </div>
-            `;
-            taskList.appendChild(taskItem);
+            tasks.push(newTask);
+            saveTasks();
+            
+            // Clear URL parameters
+            window.history.replaceState({}, document.title, window.location.pathname);
         }
+        
+        // Initialize the page
+        updateTaskCounts();
+        renderTasks();
     </script>
 </body>
 </html> 
