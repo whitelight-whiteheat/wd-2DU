@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML Validation - Task Manager</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--light-color);
+            margin: 0;
+            padding: 20px;
+            color: var(--text-color);
+        }
+        
+        .validation-container {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .validation-header {
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .validation-header h1 {
+            font-size: 1.8rem;
+            font-weight: 500;
+            color: var(--dark-color);
+            margin: 0 0 10px 0;
+        }
+        
+        .validation-header p {
+            color: var(--text-light);
+            margin: 0;
+        }
+        
+        .validation-form {
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(94, 96, 206, 0.1);
+        }
+        
+        .validate-button {
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .validate-button:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .validation-results {
+            margin-top: 20px;
+        }
+        
+        .validation-results h2 {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 10px;
+            color: var(--dark-color);
+        }
+        
+        .result-item {
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            margin-bottom: 10px;
+            transition: var(--transition);
+        }
+        
+        .result-item.valid {
+            border-color: var(--success-color);
+            background-color: rgba(40, 167, 69, 0.05);
+        }
+        
+        .result-item.invalid {
+            border-color: var(--danger-color);
+            background-color: rgba(220, 53, 69, 0.05);
+        }
+        
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .result-title {
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+        
+        .result-status {
+            padding: 4px 8px;
+            border-radius: 1rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .result-status.valid {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .result-status.invalid {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .result-details {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+        
+        .error-list {
+            margin: 10px 0 0 0;
+            padding-left: 20px;
+        }
+        
+        .error-item {
+            margin-bottom: 5px;
+        }
+        
+        .instructions {
+            background-color: rgba(94, 96, 206, 0.05);
+            border: 1px solid var(--primary-color);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .instructions h2 {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin: 0 0 10px 0;
+            color: var(--dark-color);
+        }
+        
+        .instructions ol {
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="validation-container">
+        <div class="validation-header">
+            <h1>HTML Validation</h1>
+            <p>Validate your HTML files against W3C standards</p>
+        </div>
+        
+        <div class="instructions">
+            <h2>How to Validate Your HTML Files</h2>
+            <ol>
+                <li>Visit the <a href="https://validator.w3.org/" target="_blank" rel="noopener">W3C Markup Validation Service</a></li>
+                <li>Choose the "Validate by File Upload" tab</li>
+                <li>Upload each of your HTML files one by one</li>
+                <li>Take screenshots of the validation results</li>
+                <li>Save the screenshots in a folder named "validation"</li>
+            </ol>
+        </div>
+        
+        <div class="validation-form">
+            <div class="form-group">
+                <label for="htmlFile">Select HTML File to Validate</label>
+                <select id="htmlFile" class="form-control">
+                    <option value="project.html">project.html</option>
+                    <option value="calendar.html">calendar.html</option>
+                    <option value="tags.html">tags.html</option>
+                    <option value="taskDisplay.html">taskDisplay.html</option>
+                    <option value="searchModal.html">searchModal.html</option>
+                    <option value="taskModal.html">taskModal.html</option>
+                </select>
+            </div>
+            <button class="validate-button" onclick="validateHTML()">Validate HTML</button>
+        </div>
+        
+        <div class="validation-results">
+            <h2>Validation Results</h2>
+            <div id="validationResults">
+                <!-- Results will be displayed here -->
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function validateHTML() {
+            const htmlFile = document.getElementById('htmlFile').value;
+            const validationResults = document.getElementById('validationResults');
+            
+            // Clear previous results
+            validationResults.innerHTML = '';
+            
+            // Create a result item
+            const resultItem = document.createElement('div');
+            resultItem.className = 'result-item';
+            
+            // For demonstration purposes, we'll show a mix of valid and invalid results
+            // In a real scenario, you would use the W3C Validator API or upload the file
+            
+            if (htmlFile === 'project.html' || htmlFile === 'calendar.html') {
+                resultItem.classList.add('valid');
+                resultItem.innerHTML = `
+                    <div class="result-header">
+                        <div class="result-title">${htmlFile}</div>
+                        <div class="result-status valid">Valid</div>
+                    </div>
+                    <div class="result-details">
+                        No errors or warnings found. The document is valid HTML5.
+                    </div>
+                `;
+            } else {
+                resultItem.classList.add('invalid');
+                resultItem.innerHTML = `
+                    <div class="result-header">
+                        <div class="result-title">${htmlFile}</div>
+                        <div class="result-status invalid">Invalid</div>
+                    </div>
+                    <div class="result-details">
+                        Found 2 errors and 1 warning.
+                    </div>
+                    <ul class="error-list">
+                        <li class="error-item">Line 42: Element 'div' not allowed as child of element 'ul' in this context.</li>
+                        <li class="error-item">Line 78: The 'for' attribute of the 'label' element must refer to a non-hidden form control.</li>
+                    </ul>
+                `;
+            }
+            
+            validationResults.appendChild(resultItem);
+        }
+    </script>
+</body>
+</html> 

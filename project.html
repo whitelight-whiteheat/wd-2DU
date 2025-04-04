@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Task management application">
+    <title>Project - Task Manager</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        .task-item {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .task-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .task-checkbox {
+            accent-color: var(--primary-color);
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+        }
+
+        .task-title {
+            color: var(--dark-color);
+            font-weight: 500;
+        }
+
+        .empty-state-icon {
+            color: var(--primary-color);
+            opacity: 0.8;
+        }
+
+        .add-task-link {
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: none;
+            font-weight: 500;
+        }
+
+        .add-task-link:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            color: var(--dark-color);
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .task-stats {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-item {
+            background-color: white;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            flex: 1;
+        }
+
+        .stat-label {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+        
+        .nav-button {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 0.8rem 1rem;
+            background-color: white;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            margin: 0.5rem 0;
+            font-weight: 500;
+            font-size: 0.9rem;
+            width: 100%;
+            transition: var(--transition);
+            color: var(--text-color);
+            cursor: pointer;
+        }
+        
+        .nav-button:hover {
+            background-color: rgba(94, 96, 206, 0.05);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+        
+        .search-icon, .plus-icon {
+            margin-right: 8px;
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .nav-buttons {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .logo-img {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+        
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+        }
+        
+        .task-img {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        
+        .task-content {
+            display: flex;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <img src="images/logo.png" alt="Task Manager Logo" class="logo-img">
+            <div>
+                <h1>Task Manager</h1>
+                <p>Organize your work</p>
+            </div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="project.html" class="active">Project</a></li>
+                <li><a href="calendar.html">Calendar</a></li>
+                <li><a href="tags.html">Tags</a></li>
+            </ul>
+            <div class="nav-buttons">
+                <button class="nav-button" onclick="window.open('searchModal.html', 'Search', 'width=500,height=600')">
+                    <span class="search-icon">🔍</span> Search Tasks
+                </button>
+                <button class="nav-button" onclick="window.open('taskModal.html', 'Add Task', 'width=500,height=400')">
+                    <span class="plus-icon">+</span> Add Task
+                </button>
+            </div>
+        </nav>
+    </div>
+
+    <main>
+        <div class="page-header">
+            <h1>Today's Tasks</h1>
+            <div class="task-stats">
+                <div class="stat-item">
+                    <div class="stat-label">Total Tasks</div>
+                    <div class="stat-value" id="totalTasks">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Completed</div>
+                    <div class="stat-value" id="completedTasks">0</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="taskList">
+            <!-- Tasks will be dynamically added here -->
+        </div>
+
+        <div class="empty-state" id="emptyState" style="display: none;">
+            <div class="empty-state-icon">📝</div>
+            <div class="empty-state-message">No tasks for today</div>
+            <a href="#" class="add-task-link" onclick="window.open('taskModal.html', 'Add Task', 'width=500,height=400')">Add Task</a>
+        </div>
+    </main>
+
+    <script>
+        // Simple script to handle URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const taskParam = urlParams.get('task');
+
+        if (taskParam) {
+            // Update task count
+            document.getElementById('totalTasks').textContent = '1';
+            document.getElementById('emptyState').style.display = 'none';
+            
+            // Add the task to the list
+            const taskList = document.getElementById('taskList');
+            const taskItem = document.createElement('div');
+            taskItem.className = 'task-item';
+            taskItem.innerHTML = `
+                <input type="checkbox" class="task-checkbox">
+                <div class="task-content">
+                    <img src="images/task-icon.png" alt="Task Icon" class="task-img">
+                    <div class="task-title">${taskParam}</div>
+                </div>
+            `;
+            taskList.appendChild(taskItem);
+        }
+    </script>
+</body>
+</html> 

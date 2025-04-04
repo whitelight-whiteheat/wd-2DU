@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Task management application">
+    <title>Calendar - Task Manager</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        .calendar-grid {
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+            background-color: white;
+        }
+
+        .calendar-header {
+            background-color: white;
+            color: var(--text-color);
+        }
+
+        .calendar-cell {
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .day-number {
+            color: var(--text-color);
+        }
+
+        .day-task {
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: none;
+        }
+
+        .today {
+            background-color: rgba(94, 96, 206, 0.05);
+            border: 1px solid var(--primary-color);
+        }
+
+        .today .day-number {
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            color: var(--dark-color);
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .calendar-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .calendar-nav {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .calendar-nav button {
+            background-color: white;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .calendar-nav button:hover {
+            background-color: rgba(94, 96, 206, 0.05);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .current-month {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+
+        .upcoming-events {
+            margin-top: 2rem;
+        }
+
+        .upcoming-events h2 {
+            color: var(--dark-color);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            border: 1px dashed var(--border-color);
+        }
+
+        .empty-state-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+            opacity: 0.8;
+        }
+
+        .empty-state-message {
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .add-task-link {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .add-task-link:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .nav-button {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 0.8rem 1rem;
+            background-color: white;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            margin: 0.5rem 0;
+            font-weight: 500;
+            font-size: 0.9rem;
+            width: 100%;
+            transition: var(--transition);
+            color: var(--text-color);
+            cursor: pointer;
+        }
+        
+        .nav-button:hover {
+            background-color: rgba(94, 96, 206, 0.05);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+        
+        .search-icon, .plus-icon {
+            margin-right: 8px;
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .nav-buttons {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .logo-img {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+        
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+        }
+        
+        .calendar-img {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        
+        .page-header-content {
+            display: flex;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <img src="images/logo.png" alt="" class="logo-img">
+            <div>
+                <h1>Task Manager</h1>
+                <p>Organize your work</p>
+            </div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="project.html">Project</a></li>
+                <li><a href="calendar.html" class="active">Calendar</a></li>
+                <li><a href="tags.html">Tags</a></li>
+            </ul>
+            <div class="nav-buttons">
+                <button class="nav-button" onclick="window.open('searchModal.html', 'Search', 'width=500,height=600')">
+                    <span class="search-icon">🔍</span> Search Tasks
+                </button>
+                <button class="nav-button" onclick="window.open('taskModal.html', 'Add Task', 'width=500,height=400')">
+                    <span class="plus-icon">+</span> Add Task
+                </button>
+            </div>
+        </nav>
+    </div>
+
+    <main>
+        <div class="page-header">
+            <div class="page-header-content">
+                <img src="images/calendar-icon.png" alt="" class="calendar-img">
+                <h1>Calendar View</h1>
+            </div>
+        </div>
+
+        <div class="calendar-controls">
+            <div class="calendar-nav">
+                <button id="prevMonth">&lt;</button>
+                <button id="nextMonth">&gt;</button>
+            </div>
+            <div class="current-month" id="currentMonth">September 2023</div>
+        </div>
+
+        <div class="calendar-grid">
+            <div class="calendar-header">
+                <div class="calendar-cell">Sun</div>
+                <div class="calendar-cell">Mon</div>
+                <div class="calendar-cell">Tue</div>
+                <div class="calendar-cell">Wed</div>
+                <div class="calendar-cell">Thu</div>
+                <div class="calendar-cell">Fri</div>
+                <div class="calendar-cell">Sat</div>
+            </div>
+            <div class="calendar-body" id="calendarBody">
+                <!-- Calendar days will be dynamically added here -->
+            </div>
+        </div>
+
+        <div class="upcoming-events">
+            <h2>Upcoming Events</h2>
+            <div class="empty-state">
+                <div class="empty-state-icon">📅</div>
+                <div class="empty-state-message">No upcoming events</div>
+                <a href="#" class="add-task-link" onclick="window.open('taskModal.html', 'Add Task', 'width=500,height=400')">Add Event</a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Simple calendar functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize calendar
+            const calendar = {
+                date: new Date(),
+                render: function() {
+                    const year = this.date.getFullYear();
+                    const month = this.date.getMonth();
+                    
+                    // Update current month display
+                    document.getElementById('currentMonth').textContent = 
+                        this.date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+                    
+                    // Clear existing calendar
+                    const calendarBody = document.getElementById('calendarBody');
+                    calendarBody.innerHTML = '';
+                    
+                    // Get first day of month and total days
+                    const firstDay = new Date(year, month, 1);
+                    const lastDay = new Date(year, month + 1, 0);
+                    const totalDays = lastDay.getDate();
+                    
+                    // Add empty cells for days before first day of month
+                    for (let i = 0; i < firstDay.getDay(); i++) {
+                        const emptyCell = document.createElement('div');
+                        emptyCell.className = 'calendar-day';
+                        calendarBody.appendChild(emptyCell);
+                    }
+                    
+                    // Add cells for each day of the month
+                    for (let day = 1; day <= totalDays; day++) {
+                        const dayCell = document.createElement('div');
+                        dayCell.className = 'calendar-day';
+                        
+                        // Check if today
+                        const today = new Date();
+                        if (day === today.getDate() && 
+                            month === today.getMonth() && 
+                            year === today.getFullYear()) {
+                            dayCell.classList.add('today');
+                        }
+                        
+                        dayCell.innerHTML = `
+                            <div class="day-number">${day}</div>
+                            <div class="day-tasks"></div>
+                        `;
+                        
+                        calendarBody.appendChild(dayCell);
+                    }
+                }
+            };
+            
+            // Initialize calendar
+            calendar.render();
+            
+            // Add event listeners for navigation
+            document.getElementById('prevMonth').addEventListener('click', function() {
+                calendar.date.setMonth(calendar.date.getMonth() - 1);
+                calendar.render();
+            });
+            
+            document.getElementById('nextMonth').addEventListener('click', function() {
+                calendar.date.setMonth(calendar.date.getMonth() + 1);
+                calendar.render();
+            });
+        });
+    </script>
+</body>
+</html> 

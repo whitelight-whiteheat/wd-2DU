@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Task management application">
+    <title>Tags - Task Manager</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .tag {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background-color: white;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            color: var(--text-color);
+            font-weight: 500;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .tag:hover {
+            background-color: rgba(94, 96, 206, 0.05);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .tag.active {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        .tag-count {
+            background-color: rgba(94, 96, 206, 0.1);
+            color: var(--primary-color);
+            padding: 0.2rem 0.5rem;
+            border-radius: 1rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .tag.active .tag-count {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .filter-section {
+            margin-bottom: 2rem;
+        }
+
+        .filter-section h2 {
+            color: var(--dark-color);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .filter-button {
+            padding: 0.5rem 1rem;
+            background-color: white;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            color: var(--text-color);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .filter-button:hover {
+            background-color: rgba(94, 96, 206, 0.05);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .filter-button.active {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            border: 1px dashed var(--border-color);
+        }
+
+        .empty-state-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+            opacity: 0.8;
+        }
+
+        .empty-state-message {
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .add-tag-link {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .add-tag-link:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            color: var(--dark-color);
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .nav-button {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 0.6rem 1rem;
+            background-color: rgba(94, 96, 206, 0.05);
+            border: none;
+            border-radius: var(--border-radius);
+            margin: 0.5rem 0;
+            font-weight: 500;
+            font-size: 0.9rem;
+            width: 100%;
+            transition: var(--transition);
+        }
+        
+        .nav-button:hover {
+            background-color: rgba(94, 96, 206, 0.1);
+        }
+        
+        .search-icon, .plus-icon {
+            margin-right: 8px;
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .logo-img {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+        
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+        }
+        
+        .tags-img {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        
+        .page-header-content {
+            display: flex;
+            align-items: center;
+        }
+        
+        .tag-icon {
+            width: 16px;
+            height: 16px;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <img src="images/logo.png" alt="" class="logo-img">
+            <div>
+                <h1>Task Manager</h1>
+                <p>Organize your work</p>
+            </div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="project.html">Project</a></li>
+                <li><a href="calendar.html">Calendar</a></li>
+                <li><a href="tags.html" class="active">Tags</a></li>
+            </ul>
+            <button class="nav-button" onclick="window.open('searchModal.html', 'Search', 'width=500,height=600')">
+                <span class="search-icon" aria-hidden="true">🔍</span> Search Tasks
+            </button>
+            <button class="nav-button" onclick="window.open('taskModal.html', 'Add Task', 'width=500,height=400')">
+                <span class="plus-icon" aria-hidden="true">+</span> Add Task
+            </button>
+        </nav>
+    </div>
+
+    <main>
+        <div class="page-header">
+            <div class="page-header-content">
+                <img src="images/tags-icon.png" alt="" class="tags-img">
+                <h1>Tags</h1>
+            </div>
+        </div>
+
+        <div class="filter-section">
+            <h2>Filter by Status</h2>
+            <div class="filter-buttons">
+                <button class="filter-button active">All</button>
+                <button class="filter-button">Active</button>
+                <button class="filter-button">Completed</button>
+            </div>
+        </div>
+
+        <div class="tags-container">
+            <div class="tag">
+                <img src="images/work-icon.png" alt="" class="tag-icon">
+                <span>Work</span>
+                <span class="tag-count">5</span>
+            </div>
+            <div class="tag">
+                <img src="images/personal-icon.png" alt="" class="tag-icon">
+                <span>Personal</span>
+                <span class="tag-count">3</span>
+            </div>
+            <div class="tag">
+                <img src="images/shopping-icon.png" alt="" class="tag-icon">
+                <span>Shopping</span>
+                <span class="tag-count">2</span>
+            </div>
+            <div class="tag">
+                <img src="images/health-icon.png" alt="" class="tag-icon">
+                <span>Health</span>
+                <span class="tag-count">1</span>
+            </div>
+        </div>
+
+        <div class="empty-state">
+            <div class="empty-state-icon" aria-hidden="true">🏷️</div>
+            <p class="empty-state-message">No tasks found with selected filters</p>
+            <a href="#" class="add-tag-link" onclick="window.open('taskModal.html', 'Add Task', 'width=500,height=400')">Add Task</a>
+        </div>
+    </main>
+
+    <script>
+        // Simple filter functionality
+        document.querySelectorAll('.filter-button').forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all buttons
+                document.querySelectorAll('.filter-button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                // Add active class to clicked button
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html> 
