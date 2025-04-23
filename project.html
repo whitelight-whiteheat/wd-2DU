@@ -6,6 +6,7 @@
     <meta name="description" content="Task management application">
     <title>Task Manager</title>
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/modal.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         .task-item {
@@ -263,24 +264,13 @@
                 <p>Organize your work</p>
             </div>
         </div>
-        
-        <div class="action-buttons">
-            <button class="nav-button" onclick="window.open('searchModal.html', 'Search', 'width=500,height=600')">
-                <span class="search-icon">🔍</span> Search Tasks
-            </button>
-            <button class="nav-button" id="addTaskBtn">
-                <span class="plus-icon">+</span> Add Task
-            </button>
-            <button class="nav-button" id="clearAllTasksBtn">
-                <span class="trash-icon">🗑️</span> Clear All Tasks
-            </button>
-        </div>
-        
         <nav>
             <ul>
-                <li><a href="project.html" class="active">Today</a></li>
-                <li><a href="calendar.html">Calendar</a></li>
-                <li><a href="tags.html">Tags</a></li>
+                <li><a class="add-task-button" onclick="openTaskModal()">+ Add Task</a></li>
+                <li><a class="search-button" onclick="openSearchModal()">Search</a></li>
+                <li><a href="project.html" class="nav-link">Tasks</a></li>
+                <li><a href="calendar.html" class="nav-link">Calendar</a></li>
+                <li><a href="tags.html" class="nav-link">Tags & Filters</a></li>
             </ul>
         </nav>
     </div>
@@ -311,170 +301,7 @@
         </div>
     </main>
 
-    <script>
-        // This is where I store all my tasks
-        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-        
-        // Opens a new window to add tasks
-        // I learned about window.open from MDN docs!
-        function openTaskModal() {
-            const modalWindow = window.open('taskModal.html', 'Add Task', 'width=500,height=600');
-            if (modalWindow) {
-                modalWindow.focus();
-            } else {
-                alert('Please allow popups to add tasks!');
-            }
-        }
-        
-        // Deletes all tasks after asking the user
-        function clearAllTasks() {
-            if (tasks.length === 0) {
-                alert('No tasks to clear!');
-                return;
-            }
-            
-            // Always ask before deleting - good practice!
-            if (confirm('Do you want to delete all tasks? You cannot undo this!')) {
-                tasks = [];
-                saveTasks();
-                alert('All tasks cleared!');
-            }
-        }
-        
-        // This runs when the page loads
-        // I learned about DOMContentLoaded from class
-        document.addEventListener('DOMContentLoaded', function() {
-            // Connect the buttons to their functions
-            document.getElementById('addTaskBtn').addEventListener('click', openTaskModal);
-            document.getElementById('addTaskLink').addEventListener('click', function(e) {
-                e.preventDefault(); // Prevents the link from actually going somewhere
-                openTaskModal();
-            });
-            document.getElementById('clearAllTasksBtn').addEventListener('click', clearAllTasks);
-            
-            // Listen for new tasks being added
-            window.addEventListener('message', function(event) {
-                if (event.data === 'taskAdded') {
-                    // Get the updated task list
-                    tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-                    updateTaskCounts();
-                    renderTasks();
-                }
-            });
-            
-            // Load saved tasks when page opens
-            tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-            
-            // Update the page
-            updateTaskCounts();
-            renderTasks();
-        });
-        
-        // Save tasks to browser storage
-        // localStorage is like a mini database in the browser!
-        function saveTasks() {
-            localStorage.setItem('tasks', JSON.stringify(tasks));
-            updateTaskCounts();
-            renderTasks();
-        }
-        
-        // Update the task counter at the top
-        function updateTaskCounts() {
-            const totalTasks = tasks.length;
-            const completedTasks = tasks.filter(task => task.completed).length;
-            
-            document.getElementById('totalTasks').textContent = totalTasks;
-            document.getElementById('completedTasks').textContent = completedTasks;
-        }
-        
-        // Show all tasks on the page
-        function renderTasks() {
-            const taskList = document.getElementById('taskList');
-            taskList.innerHTML = ''; // Clear the old tasks first
-            
-            // Show "no tasks" message if empty
-            document.getElementById('emptyState').style.display = tasks.length === 0 ? 'block' : 'none';
-            
-            if (tasks.length === 0) {
-                return;
-            }
-            
-            // Loop through each task and create its HTML
-            tasks.forEach((task, index) => {
-                const taskItem = document.createElement('div');
-                taskItem.className = 'task-item';
-                
-                // Set the priority color
-                const priorityClass = `priority-${task.priority || 'medium'}`;
-                
-                // Create the HTML for tags
-                let tagsHTML = '';
-                if (task.tags && task.tags.length > 0) {
-                    // Handle tags whether they're text or array
-                    let tagList = Array.isArray(task.tags) ? task.tags : task.tags.split(',');
-                    tagsHTML = tagList.map(tag => 
-                        `<a href="tags.html?tag=${tag}" class="task-tag">${tag}</a>`
-                    ).join('');
-                }
-                
-                // Format the due date nicely
-                let dueDateHTML = '';
-                if (task.dueDate) {
-                    dueDateHTML = `<a href="calendar.html?date=${task.dueDate}" class="task-detail">
-                        📅 ${formatDate(task.dueDate)}</a>`;
-                }
-                
-                // Put it all together!
-                taskItem.innerHTML = `
-                    <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''} data-index="${index}">
-                    <div class="task-content">
-                        <div class="task-title ${task.completed ? 'task-completed' : ''}">${task.title}</div>
-                        <div class="task-details">
-                            <span class="task-priority ${priorityClass}">${task.priority || 'Medium'}</span>
-                            ${tagsHTML}
-                            ${dueDateHTML}
-                        </div>
-                    </div>
-                `;
-                
-                taskList.appendChild(taskItem);
-            });
-            
-            // Make the checkboxes work
-            document.querySelectorAll('.task-checkbox').forEach(checkbox => {
-                checkbox.addEventListener('change', function() {
-                    const index = parseInt(this.getAttribute('data-index'));
-                    tasks[index].completed = this.checked;
-                    saveTasks();
-                });
-            });
-        }
-        
-        // Make dates look nice (like "Sep 15" instead of "2023-09-15")
-        function formatDate(dateString) {
-            const options = { month: 'short', day: 'numeric' };
-            return new Date(dateString).toLocaleDateString('en-US', options);
-        }
-        
-        // Handle adding tasks from URL (learned about URL parameters in class!)
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('task')) {
-            const newTask = {
-                title: urlParams.get('task'),
-                priority: urlParams.get('priority') || 'medium',
-                tags: urlParams.get('tags') || '',
-                dueDate: urlParams.get('dueDate') || '',
-                description: urlParams.get('description') || '',
-                completed: false,
-                createdAt: new Date().toISOString()
-            };
-            
-            tasks.push(newTask);
-            saveTasks();
-            
-            // Clean up the URL after adding the task
-            window.history.replaceState({}, document.title, window.location.pathname);
-        }
-    </script>
+    <script src="js/modal.js"></script>
+    <script src="js/script.js"></script>
 </body>
 </html> 

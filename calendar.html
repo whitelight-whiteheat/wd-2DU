@@ -6,6 +6,7 @@
     <meta name="description" content="Task management application">
     <title>Calendar - Task Manager</title>
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/modal.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         .calendar-grid {
@@ -242,25 +243,16 @@
                 <p>Organize your work</p>
             </div>
         </div>
-        
-        <div class="action-buttons">
-            <button class="nav-button" onclick="window.open('searchModal.html', 'Search', 'width=500,height=600')">
-                <span class="search-icon" aria-hidden="true">🔍</span> Search Tasks
-            </button>
-            <button class="nav-button" onclick="window.open('taskModal.html', 'Add Task', 'width=500,height=400')">
-                <span class="plus-icon" aria-hidden="true">+</span> Add Task
-            </button>
-        </div>
-        
         <nav>
             <ul>
-                <li><a href="project.html">Today</a></li>
-                <li><a href="calendar.html" class="active">Calendar</a></li>
-                <li><a href="tags.html">Tags</a></li>
+                <li><a class="add-task-button" onclick="openTaskModal()">Add Task</a></li>
+                <li><a class="search-button" onclick="openSearchModal()">Search</a></li>
+                <li><a href="project.html" class="nav-link">Tasks</a></li>
+                <li><a href="calendar.html" class="nav-link">Calendar</a></li>
+                <li><a href="tags.html" class="nav-link">Tags & Filters</a></li>
             </ul>
         </nav>
     </div>
-
     <main>
         <div class="page-header">
             <div class="page-header-content">
@@ -298,139 +290,7 @@
         </div>
     </main>
 
-    <script>
-        // Get my tasks from browser storage
-        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-        
-        // Keep track of which month we're looking at
-        let currentDate = new Date();
-        let currentMonth = currentDate.getMonth();
-        let currentYear = currentDate.getFullYear();
-        
-        // Start everything when the page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            // Check if we came here by clicking a task's date
-            const urlParams = new URLSearchParams(window.location.search);
-            const dateParam = urlParams.get('date');
-            
-            if (dateParam) {
-                // Go to the month of the clicked task
-                const targetDate = new Date(dateParam);
-                if (!isNaN(targetDate.getTime())) {
-                    currentDate = targetDate;
-                    currentMonth = currentDate.getMonth();
-                    currentYear = currentDate.getFullYear();
-                }
-            }
-            
-            // Show the calendar
-            renderCalendar();
-            
-            // Make the previous month button work
-            document.getElementById('prevMonth').addEventListener('click', function() {
-                currentMonth--;
-                if (currentMonth < 0) {
-                    currentMonth = 11; // Go to December
-                    currentYear--;     // of the previous year
-                }
-                renderCalendar();
-            });
-            
-            // Make the next month button work
-            document.getElementById('nextMonth').addEventListener('click', function() {
-                currentMonth++;
-                if (currentMonth > 11) {
-                    currentMonth = 0;  // Go to January
-                    currentYear++;     // of the next year
-                }
-                renderCalendar();
-            });
-            
-            // Update when new tasks are added
-            window.addEventListener('message', function(event) {
-                if (event.data === 'taskAdded') {
-                    loadTasks();
-                    renderCalendar();
-                }
-            });
-        });
-
-        // Draw the calendar on the page
-        function renderCalendar() {
-            // Show which month we're looking at
-            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
-                              'July', 'August', 'September', 'October', 'November', 'December'];
-            document.getElementById('currentMonth').textContent = 
-                monthNames[currentMonth] + ' ' + currentYear;
-            
-            // Clear the old calendar
-            const calendarBody = document.getElementById('calendarBody');
-            calendarBody.innerHTML = '';
-            
-            // Figure out where to start the calendar
-            const firstDay = new Date(currentYear, currentMonth, 1);
-            const lastDay = new Date(currentYear, currentMonth + 1, 0);
-            const totalDays = lastDay.getDate();
-            
-            // Add empty boxes for days before the 1st
-            for (let i = 0; i < firstDay.getDay(); i++) {
-                const emptyCell = document.createElement('div');
-                emptyCell.className = 'calendar-day';
-                calendarBody.appendChild(emptyCell);
-            }
-            
-            // Add a box for each day of the month
-            for (let day = 1; day <= totalDays; day++) {
-                const dayCell = document.createElement('div');
-                dayCell.className = 'calendar-day';
-                
-                // Highlight today's date
-                const today = new Date();
-                if (day === today.getDate() && 
-                    currentMonth === today.getMonth() && 
-                    currentYear === today.getFullYear()) {
-                    dayCell.classList.add('today');
-                }
-                
-                // Find tasks due on this day
-                const dateString = new Date(currentYear, currentMonth, day).toISOString().split('T')[0];
-                const dayTasks = tasks.filter(task => {
-                    if (!task.dueDate) return false;
-                    const taskDate = new Date(task.dueDate).toISOString().split('T')[0];
-                    return taskDate === dateString;
-                });
-                
-                // Add tasks to the calendar day
-                let tasksHTML = '';
-                if (dayTasks.length > 0) {
-                    tasksHTML = dayTasks.map(task => {
-                        // Show tags if the task has any
-                        let tagsHTML = '';
-                        if (task.tags && task.tags.length > 0) {
-                            let tagList = Array.isArray(task.tags) ? task.tags : task.tags.split(',');
-                            tagsHTML = tagList.map(tag => 
-                                `<a href="tags.html?tag=${tag}" class="task-tag">${tag}</a>`
-                            ).join('');
-                        }
-                        
-                        return `<div class="day-task">${task.title} ${tagsHTML}</div>`;
-                    }).join('');
-                }
-                
-                // Put the day number and tasks in the calendar box
-                dayCell.innerHTML = `
-                    <div class="day-number">${day}</div>
-                    <div class="day-tasks">${tasksHTML}</div>
-                `;
-                
-                calendarBody.appendChild(dayCell);
-            }
-        }
-        
-        // Get fresh tasks from storage
-        function loadTasks() {
-            tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-        }
-    </script>
+    <script src="js/modal.js"></script>
+    <script src="js/script.js"></script>
 </body>
 </html> 
